@@ -16,10 +16,10 @@
   }
   const hideTip = () => tip.style("opacity", 0);
 
-  function frame(el, { height = 260, margin = {} } = {}) {
+  function frame(el, { height = 260, margin = {}, minWidth = 260 } = {}) {
     const root = d3.select(el);
     root.selectAll("*").remove();
-    const width = Math.max(260, el.clientWidth || 600);
+    const width = Math.max(minWidth, el.clientWidth || 600);
     const m = Object.assign({ top: 24, right: 16, bottom: 34, left: 44 }, margin);
     const svg = root.append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("role", "img");
     const g = svg.append("g").attr("transform", `translate(${m.left},${m.top})`);
@@ -60,14 +60,14 @@
     const y = d3.scaleLinear().domain([0, yMax ?? d3.max(all, (d) => d[1]) * 1.08]).nice().range([f.h, 0]);
     areas.forEach((a) => {
       f.g.append("rect").attr("x", x(a.from)).attr("y", 0).attr("width", x(a.to) - x(a.from)).attr("height", f.h)
-        .attr("fill", css("--surface-2"));
-      f.g.append("text").attr("class", "annot").attr("x", x(a.from) + 6).attr("y", 12).text(a.label);
+        .attr("fill", css(a.color || "--surface-2")).attr("fill-opacity", a.color ? 0.16 : 1);
+      f.g.append("text").attr("class", "annot").attr("x", x(a.from) + 6).attr("y", 12 + (a.row || 0) * 13).text(a.label);
     });
     axes(f, x, y, { xLabel, yLabel, yFormat, xFormat, xTickValues });
     markers.forEach((mk) => {
       f.g.append("line").attr("x1", x(mk.x)).attr("x2", x(mk.x)).attr("y1", 0).attr("y2", f.h)
         .attr("stroke", css("--ink-2")).attr("stroke-width", 1);
-      f.g.append("text").attr("class", "annot").attr("x", x(mk.x) + 5).attr("y", 12).text(mk.label);
+      f.g.append("text").attr("class", "annot").attr("x", x(mk.x) + 5).attr("y", 12 + (mk.row || 0) * 13).text(mk.label);
     });
     const ln = d3.line().x((d) => x(d[0])).y((d) => y(d[1])).curve(series[0].step ? d3.curveStepAfter : d3.curveMonotoneX);
     series.forEach((s) => {
@@ -99,20 +99,21 @@
   }
 
   /* ---------- vertical bars (single, grouped or stacked) ---------- */
-  function bars(el, { data, x: xKey, keys, colors, names, stacked = false, height = 240, xLabel, yLabel, yFormat, tipFmt, xTickFormat, shade, yMax }) {
+  function bars(el, { data, x: xKey, keys, colors, names, stacked = false, height = 240, xLabel, yLabel, yFormat, tipFmt, xTickFormat, shade, yMax, tickEvery }) {
     const f = frame(el, { height });
     const x = d3.scaleBand().domain(data.map((d) => d[xKey])).range([0, f.w]).padding(0.25);
     const top = stacked ? d3.max(data, (d) => d3.sum(keys, (k) => d[k])) : d3.max(data, (d) => d3.max(keys, (k) => d[k]));
     const y = d3.scaleLinear().domain([0, yMax ?? Math.max(1, top * 1.08)]).nice().range([f.h, 0]);
-    if (shade) {
-      const xs = data.filter(shade.when).map((d) => x(d[xKey]));
+    (Array.isArray(shade) ? shade : shade ? [shade] : []).forEach((sh) => {
+      const xs = data.filter(sh.when).map((d) => x(d[xKey]));
       if (xs.length) {
         f.g.append("rect").attr("x", d3.min(xs) - x.step() * x.padding() / 2).attr("y", 0)
-          .attr("width", d3.max(xs) - d3.min(xs) + x.step()).attr("height", f.h).attr("fill", css("--surface-2"));
-        f.g.append("text").attr("class", "annot").attr("x", d3.min(xs) + 2).attr("y", 12).text(shade.label);
+          .attr("width", d3.max(xs) - d3.min(xs) + x.step()).attr("height", f.h).attr("fill", css(sh.color || "--surface-2"))
+          .attr("fill-opacity", sh.color ? 0.16 : 1);
+        f.g.append("text").attr("class", "annot").attr("x", d3.min(xs) + 2).attr("y", 12 + (sh.row || 0) * 13).text(sh.label);
       }
-    }
-    const every = Math.ceil(data.length / Math.max(4, Math.floor(f.w / 46)));
+    });
+    const every = tickEvery || Math.ceil(data.length / Math.max(4, Math.floor(f.w / 46)));
     axes(f, x, y, { xLabel, yLabel, yFormat, xFormat: (v, i) => (i % every ? "" : (xTickFormat ? xTickFormat(v) : v)) });
     const sub = stacked ? null : d3.scaleBand().domain(keys).range([0, x.bandwidth()]).padding(0.12);
     data.forEach((d) => {
@@ -314,7 +315,106 @@
     render();
   }
 
-  window.Charts = { line, bars, hbars, histogram, scatter, matrix, dots, ranges, network, table, css, fmt };
+  /* ---------- forest plot: point estimate + 95% CI per row ---------- */
+  function forest(el, { rows, xDomain, ref, xLabel, labelW = 200, tipFmt, xFormat, colorOf, log = false, rowH = 34 }) {
+    const f = frame(el, { height: rows.length * rowH + 50, margin: { left: labelW, right: 24, top: 10 } });
+    const y = d3.scaleBand().domain(rows.map((r) => r.label)).range([0, f.h]).padding(0.3);
+    const x = (log ? d3.scaleLog() : d3.scaleLinear()).domain(xDomain).range([0, f.w]).clamp(true);
+    const ticks = log ? x.ticks(5).filter((t) => [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50].includes(+t.toPrecision(1))) : x.ticks(5);
+    f.g.append("g").attr("class", "grid").attr("transform", `translate(0,${f.h})`).call(d3.axisBottom(x).tickValues(ticks).tickSize(-f.h).tickFormat(""));
+    f.g.append("g").attr("class", "axis").attr("transform", `translate(0,${f.h})`).call(d3.axisBottom(x).tickValues(ticks).tickSizeOuter(0).tickFormat(xFormat || (log ? d3.format("~g") : null)));
+    f.g.append("g").attr("class", "axis").call(d3.axisLeft(y).tickSize(0).tickPadding(8)).select(".domain").remove();
+    if (ref != null) f.g.append("line").attr("x1", x(ref)).attr("x2", x(ref)).attr("y1", 0).attr("y2", f.h).attr("stroke", css("--ink-2")).attr("stroke-dasharray", "3 3");
+    if (xLabel) f.g.append("text").attr("x", f.w).attr("y", f.h + 32).attr("text-anchor", "end").text(xLabel);
+    rows.forEach((r) => {
+      const cy = y(r.label) + y.bandwidth() / 2, col = css(colorOf ? colorOf(r) : "--s1");
+      const g = f.g.append("g").on("mousemove", (ev) => showTip(ev, tipFmt ? tipFmt(r) : `<b>${r.label}</b>`)).on("mouseleave", hideTip);
+      g.append("rect").attr("x", 0).attr("y", y(r.label)).attr("width", f.w).attr("height", y.bandwidth()).attr("fill", "transparent");
+      if (r.ci) g.append("line").attr("x1", x(r.ci[0])).attr("x2", x(r.ci[1])).attr("y1", cy).attr("y2", cy).attr("stroke", col).attr("stroke-width", 2.5).attr("stroke-linecap", "round");
+      g.append("circle").attr("cx", x(r.est)).attr("cy", cy).attr("r", 6).attr("fill", col).attr("stroke", css("--surface")).attr("stroke-width", 2);
+    });
+  }
+
+  /* ---------- swimlanes: one row per agent over time ---------- */
+  function swimlanes(el, { lanes, xMax, interventions = [], stalls = [], xLabel = "hours →", labelW = 78, rowH = 15, legend = true }) {
+    const f = frame(el, { height: lanes.length * rowH + 64, margin: { left: labelW, right: 14, top: 30 } });
+    const x = d3.scaleLinear().domain([0, xMax]).range([0, f.w]);
+    const y = d3.scaleBand().domain(lanes.map((l) => l.agent)).range([0, f.h]).padding(0.18);
+    stalls.forEach(([a, b]) => f.g.append("rect").attr("x", x(a)).attr("width", x(b) - x(a)).attr("y", 0).attr("height", f.h).attr("fill", css("--surface-2")));
+    f.g.append("g").attr("class", "axis").attr("transform", `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(8).tickSizeOuter(0));
+    f.g.append("g").attr("class", "axis").call(d3.axisLeft(y).tickSize(0).tickPadding(6)).select(".domain").remove();
+    f.g.selectAll(".axis text").style("font-size", "11px");
+    f.g.append("text").attr("x", f.w).attr("y", f.h + 30).attr("text-anchor", "end").text(xLabel);
+    lanes.forEach((l) => {
+      const y0 = y(l.agent), bh = y.bandwidth();
+      const g = f.g.append("g").on("mousemove", (ev) => showTip(ev, `<b>${l.agent}</b><br>${fmt(l.calls)} model calls` +
+        (l.outages && l.outages.length ? `<br>not scheduled: ${l.outages.map(([a, b]) => `${a.toFixed(1)}–${b.toFixed(1)} h`).join(", ")}` : "") +
+        (l.starved && l.starved.length ? `<br>queue starved: ${l.starved.map(([a, b]) => `${a.toFixed(1)}–${b.toFixed(1)} h`).join(", ")}` : "") +
+        (l.restarts && l.restarts.length ? `<br>worker restarted at ${l.restarts.map((r) => r.toFixed(2) + " h").join(", ")}` : ""))).on("mouseleave", hideTip);
+      g.append("rect").attr("x", 0).attr("y", y0).attr("width", f.w).attr("height", bh).attr("fill", "transparent");
+      (l.outages || []).forEach(([a, b]) => g.append("rect").attr("x", x(a)).attr("y", y0).attr("width", Math.max(1, x(b) - x(a))).attr("height", bh).attr("rx", 2).attr("fill", css("--s2")).attr("fill-opacity", 0.85));
+      (l.starved || []).forEach(([a, b]) => g.append("rect").attr("x", x(a)).attr("y", y0 + bh * 0.25).attr("width", Math.max(1, x(b) - x(a))).attr("height", bh * 0.5).attr("rx", 2).attr("fill", css("--s3")).attr("fill-opacity", 0.9));
+      g.append("path").attr("d", l.ticks.map((t) => `M${x(t).toFixed(1)},${y0 + 1}V${y0 + bh - 1}`).join("")).attr("stroke", css("--s1")).attr("stroke-width", 1).attr("stroke-opacity", 0.55);
+      (l.restarts || []).forEach((r) => g.append("path").attr("d", d3.symbol(d3.symbolTriangle, 34)()).attr("transform", `translate(${x(r)},${y0 + bh / 2}) rotate(90)`).attr("fill", css("--ink")));
+    });
+    interventions.forEach((iv, i) => {
+      f.g.append("line").attr("x1", x(iv.h)).attr("x2", x(iv.h)).attr("y1", -6).attr("y2", f.h).attr("stroke", css("--ink-2")).attr("stroke-dasharray", "4 3");
+      f.g.append("text").attr("class", "annot").attr("x", x(iv.h) + 4).attr("y", -10 - (i % 2) * 0).attr("text-anchor", i % 2 ? "start" : "end").attr("dx", i % 2 ? 0 : -8).text(iv.short || iv.label);
+    });
+  }
+
+  /* ---------- small multiples of share-over-time ---------- */
+  function multiples(el, { series, xMax, yMax, markers = [], color = "--s1", minW = 200, height = 110, xLabel = "h", yFormat = d3.format(".0%") }) {
+    const root = d3.select(el); root.selectAll("*").remove();
+    const cols = Math.max(1, Math.floor((el.clientWidth || 600) / minW));
+    const grid = root.append("div").attr("class", "multiples").style("grid-template-columns", `repeat(${cols}, 1fr)`);
+    const ym = yMax ?? d3.max(series, (s) => d3.max(s.points, (p) => p[1]));
+    series.forEach((s) => {
+      const cell = grid.append("div").attr("class", "mult");
+      cell.append("p").attr("class", "mult-title").html(`${s.topic} <span>${yFormat(s.share)}</span>`);
+      if (s.terms) cell.append("p").attr("class", "mult-terms").text(s.terms.join(" · "));
+      const box = cell.append("div").node();
+      const f = frame(box, { height, minWidth: 120, margin: { top: 6, right: 6, bottom: 20, left: 30 } });
+      const x = d3.scaleLinear().domain([0, xMax]).range([0, f.w]);
+      const y = d3.scaleLinear().domain([0, ym]).nice().range([f.h, 0]);
+      f.g.append("g").attr("class", "grid").call(d3.axisLeft(y).ticks(2).tickSize(-f.w).tickFormat(""));
+      f.g.append("g").attr("class", "axis").attr("transform", `translate(0,${f.h})`).call(d3.axisBottom(x).ticks(4).tickSizeOuter(0).tickFormat((v) => v + xLabel));
+      f.g.append("g").attr("class", "axis").call(d3.axisLeft(y).ticks(2).tickFormat(yFormat)).select(".domain").remove();
+      markers.forEach((m) => f.g.append("line").attr("x1", x(m)).attr("x2", x(m)).attr("y1", 0).attr("y2", f.h).attr("stroke", css("--ink-2")).attr("stroke-dasharray", "3 3"));
+      const area = d3.area().x((d) => x(d[0])).y0(f.h).y1((d) => y(d[1])).curve(d3.curveMonotoneX);
+      f.g.append("path").attr("d", area(s.points)).attr("fill", css(color)).attr("fill-opacity", 0.22);
+      f.g.append("path").attr("d", d3.line().x((d) => x(d[0])).y((d) => y(d[1])).curve(d3.curveMonotoneX)(s.points)).attr("fill", "none").attr("stroke", css(color)).attr("stroke-width", 1.8);
+      f.g.append("rect").attr("width", f.w).attr("height", f.h).attr("fill", "transparent").on("mousemove", (ev) => {
+        const xv = x.invert(d3.pointer(ev)[0]);
+        const d = s.points.reduce((a, b) => (Math.abs(b[0] - xv) < Math.abs(a[0] - xv) ? b : a));
+        showTip(ev, `<b>${s.topic}</b><br>${d[0]} ${xLabel}: ${yFormat(d[1])} of messages`);
+      }).on("mouseleave", hideTip);
+    });
+  }
+
+  /* ---------- heat table: rows × columns, single-hue intensity ---------- */
+  function heat(el, { rows, cols, value, label = (r) => r.label, max = 1, labelW = 96, cellH = 20, color = "--s1", tipFmt, valueFmt = d3.format(".0%"), groupOf }) {
+    const f = frame(el, { height: rows.length * cellH + 40, margin: { left: labelW, right: 8, top: 34, bottom: 6 } });
+    const x = d3.scaleBand().domain(cols).range([0, f.w]).padding(0.06);
+    const y = d3.scaleBand().domain(rows.map(label)).range([0, f.h]).padding(0.08);
+    f.g.append("g").attr("class", "axis").call(d3.axisTop(x).tickSize(0).tickPadding(6)).select(".domain").remove();
+    f.g.append("g").attr("class", "axis").call(d3.axisLeft(y).tickSize(0).tickPadding(6)).select(".domain").remove();
+    f.g.selectAll(".axis text").style("font-size", "11px");
+    rows.forEach((r) => cols.forEach((c, j) => {
+      const v = value(r, j);
+      const g = f.g.append("g").on("mousemove", (ev) => showTip(ev, tipFmt ? tipFmt(r, j) : `<b>${label(r)}</b><br>${c}: ${valueFmt(v)}`)).on("mouseleave", hideTip);
+      g.append("rect").attr("x", x(c)).attr("y", y(label(r))).attr("width", x.bandwidth()).attr("height", y.bandwidth()).attr("rx", 3)
+        .attr("fill", css(color)).attr("fill-opacity", v > 0 ? 0.08 + 0.92 * Math.min(1, v / max) : 0.03);
+      if (x.bandwidth() > 34 && v > 0) g.append("text").attr("x", x(c) + x.bandwidth() / 2).attr("y", y(label(r)) + y.bandwidth() / 2).attr("dy", "0.35em")
+        .attr("text-anchor", "middle").style("font-size", "10px").attr("fill", v / max > 0.55 ? css("--surface") : css("--ink-2")).text(valueFmt(v));
+    }));
+    if (groupOf) {
+      let prev = null;
+      rows.forEach((r) => { const gname = groupOf(r); if (prev !== null && gname !== prev) f.g.append("line").attr("x1", -labelW + 4).attr("x2", f.w).attr("y1", y(label(r)) - 1).attr("y2", y(label(r)) - 1).attr("stroke", css("--ink-2")); prev = gname; });
+    }
+  }
+
+  window.Charts = { line, bars, hbars, histogram, scatter, matrix, dots, ranges, network, table, forest, swimlanes, multiples, heat, css, fmt };
 
   /* ---------- page plumbing: theme toggle, re-render on resize/theme ---------- */
   const renderers = [];

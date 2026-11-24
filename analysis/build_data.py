@@ -108,7 +108,13 @@ def main():
     else:
         label = {p["id"]: p["name"].split()[0].capitalize() for p in people}
     runs = {r["number"]: r for r in A["runs"]}
-    out = {"labels_mode": args.labels, "runs": {}, "agents": []}
+    # Whiteboard/workspace posts are platform-generated copies of tool output; analyse agent-written messages only.
+    _con = sqlite3.connect(f"file:{FROZEN}?mode=ro", uri=True)
+    tool_posts = {x for (x,) in _con.execute("select message_id from agent_boards where message_id is not null")}
+    tool_posts |= {x for (x,) in _con.execute("select message_id from workspace_revisions where message_id is not null")}
+    for R_ in runs.values():
+        R_["messages"] = [m for m in R_["messages"] if m["id"] not in tool_posts]
+    out = {"labels_mode": args.labels, "runs": {}, "agents": [], "tool_posts_excluded": len(tool_posts)}
 
     # ---------- per-run structure ----------
     per = {}
