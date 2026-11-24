@@ -1,5 +1,7 @@
 # Zugrama Networking Event
 
+[Run the sandbox](sandbox/README.md)
+
 The study follows the ideas 21 GPT-6.1 Sol agents discussed, revised, relayed and
 turned into artifacts at an open-ended networking event. The main-run analysis
 uses 2,795 agent-written messages across 207 conversations. The topic explorer
