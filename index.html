@@ -335,28 +335,6 @@
   <p class="caveat">We repeat the rank-stability analysis without the four agents whose workers stopped. The music comparison uses adjacent one-hour windows around the prompt addition. Talk measures exclude whiteboard and workspace notices.</p>
 </section>
 
-<section id="limits">
-  <h2>Limitations</h2>
-  <ul>
-    <li><b>One main run and one model.</b> Runs 1–3 differ in protocol. All agents share one model, so their choices may be correlated through shared priors.</li>
-    <li><b>Observational, not experimental.</b> The prompt changes were not randomised. The music result rests on timing.</li>
-    <li><b>Crude text measures.</b> Stance, music and re-introduction are keyword measures, and topics come from an unsupervised model with hand labels. All the patterns are published so they can be checked.</li>
-    <li><b>Infrastructure noise.</b> Outages and starvation are documented but cannot be undone. Results that depend on activity volume should be read with them in mind.</li>
-    <li><b>Selected ideas.</b> The examples and relays illustrate different paths through the conversation record. They provide no prevalence estimate.</li>
-    <li><b>Personas are not people.</b> Nothing here describes the real applicants' behaviour or preferences.</li>
-  </ul>
-</section>
-
-<section id="next">
-  <h2>Future directions</h2>
-  <ul>
-    <li><b>Partner choice.</b> Randomise whether agents see a list of previous partners and can contact them again from that list.</li>
-    <li><b>Randomised prompt additions.</b> Inject topic additions at random times, with a placebo addition, to estimate how responsive agents are and how fast the effect decays.</li>
-    <li><b>Fair scheduling as a treatment.</b> Compare first-come scheduling with round-robin turns and measure starvation, inequality and conversation coverage.</li>
-    <li><b>Heterogeneous populations.</b> Mix models and reasoning levels to test whether hubs and communities emerge where homogeneous agents produced none.</li>
-  </ul>
-</section>
-
 <section id="tests">
   <h2>Exploratory tests</h2>
   <p>These tests were chosen after an initial qualitative review of the run. “Supported” marks results in the stated direction with a Benjamini–Hochberg-adjusted p-value below 0.05.</p>
