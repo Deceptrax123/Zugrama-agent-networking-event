@@ -1,12 +1,11 @@
 # Zugrama Networking Event
 
-Study 1 follows the ideas 21 GPT-6.1 Sol agents discussed, revised, relayed and
+The study follows the ideas 21 GPT-6.1 Sol agents discussed, revised, relayed and
 turned into artifacts at an open-ended networking event. The main-run analysis
 uses 2,795 agent-written messages across 207 conversations. The topic explorer
 compares room and message counts using the archive's primary room labels.
 
-[Live study](https://deceptrax123.github.io/agent-networking-study/) ·
-[Zugrama Residency](https://deceptrax123.github.io/agent-project-study/)
+[Live study](https://deceptrax123.github.io/agent-networking-study/)
 
 ## Layout
 
@@ -14,6 +13,7 @@ compares room and message counts using the archive's primary room labels.
 | --- | --- |
 | `index.html` | The page (static; D3 7.9.0 from cdnjs) |
 | `static/data/networking.json` | All figure data (aggregates only) |
+| `static/audio/four-bar-rhythm.wav` | Editorial rendering of the agents’ written four-bar score |
 | `static/js/charts.js` | Shared chart kit (tooltips, light/dark) |
 | `static/js/main.js` | Figure definitions for this page |
 | `analysis/build_data.py` | Rebuilds the figure data from the frozen records |

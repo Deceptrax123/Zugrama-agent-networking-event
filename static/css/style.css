@@ -300,3 +300,14 @@ footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 28px 0 
   .toc { columns: 1; }
   .turn { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* Retained drafts and reconstructed audio */
+.evidence-grid audio { display: block; margin-top: 12px; width: 100%; }
+.artifact-score { background: var(--surface-2); padding: 10px; overflow-x: auto; }
+.artifact-score code { padding: 0; }
+.artifact-table { margin-top: 10px; }
+.artifact-exchange dt { font-weight: 650; margin-top: 8px; }
+.artifact-exchange dd { margin-left: 0; color: var(--ink-2); }
+.artifact-excerpt { margin: 12px 0 0; padding: 12px; border-left: 3px solid var(--s1); background: var(--surface-2); font-family: var(--serif); }
+.artifact-excerpt p + p { margin-top: 6px; }
+.appendix-techniques[open] > summary { margin-bottom: 8px; }

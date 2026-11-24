@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="static/css/style.css">
+<link rel="stylesheet" href="static/css/style.css?v=3">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='9' cy='10' r='5' fill='%232a78d6'/%3E%3Ccircle cx='23' cy='10' r='5' fill='%232a78d6'/%3E%3Ccircle cx='16' cy='23' r='5' fill='%232a78d6'/%3E%3Cpath d='M9 10L23 10L16 23Z' fill='none' stroke='%232a78d6' stroke-width='2'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -22,10 +22,11 @@
     <nav aria-label="Sections">
       <a href="#abstract">Abstract</a>
       <a href="#ideas">Ideas and solutions</a>
+      <a href="#artifacts">Artifacts</a>
       <a href="#directions">Topic diversity</a>
       <a href="#results">Who met whom</a>
       <a href="#labour">Shared work</a>
-      <a href="#methods">Methods</a>
+      <a href="#methods">Appendix</a>
       <a href="#cite">Cite</a>
     </nav>
     <button class="theme-btn" type="button">Dark mode</button>
@@ -34,14 +35,13 @@
 
 <main id="top">
 <header class="hero wrap">
-  <p class="venue">Zugrama studies · Study 1</p>
   <h1 class="title">Zugrama Networking Event</h1>
   <p class="subtitle">What agents proposed, discussed, and made together when they could choose whom to meet</p>
   <p class="authors">Srinitish Srinivasan</p>
   <p class="affil">Agent Network Sandbox · November 2026</p>
   <div class="buttons">
     <a class="btn" href="#ideas">Read the idea cases</a>
-    <a class="btn secondary" href="../agent-project-study/">Zugrama Residency</a>
+    <a class="btn secondary" href="#artifacts">See what they made</a>
   </div>
 </header>
 
@@ -84,7 +84,7 @@
 
 <section id="ideas">
   <h2>Ideas proposed and solutions discussed</h2>
-  <p>A networking exchange could lead to a design choice, a written artifact or an executable check. These cases were selected to show that range. The links point to the exchanges and artifacts that support each account.</p>
+  <p>A networking exchange could lead to a design choice, a written artifact or an executable check. These cases were selected to show that range. The saved drafts and a conversation excerpt appear below.</p>
   <div class="evidence-grid">
     <article class="case">
       <h3>Memory corrections could preserve the original record</h3>
@@ -92,7 +92,7 @@
       <details class="case-evidence">
         <summary>Outcome and sources</summary>
         <p>Hiro and Shriyanshi raised a second question: should the assistant use that memory at all? In their editing example, mentioning a personal preference would distract from the request. The program tested dependence between claims in a small example. The editing advice remained a design proposal.</p>
-        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/8d835b0b854f4163961c1750ae2e8381">Memory whiteboard</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#code/2833d96d4b00744d6acb92b2fd874f8c9adc0884601085af4f15ed8595494855">Execution record</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/bab1024a0b014b13bc22fa1fdf56e2a6">Editing example</a></p>
+        <p class="source-links"><a href="#memory-artifact">See the experiment result</a></p>
       </details>
     </article>
     <article class="case">
@@ -101,7 +101,7 @@
       <details class="case-evidence">
         <summary>Outcome and sources</summary>
         <p>The surviving record shows the proposal, its relay, and the recipient’s response. The case documents how three agents arrived at a design decision through two-person rooms.</p>
-        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#message/295a069eb0c94a31bf3e933cf073c467">Suggestion</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#message/e83a437ea7404b949813345db3b71170">Relay</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#message/0258a2d76e3641b389500fcb379df976">Response</a></p>
+        <p class="source-links"><a href="#creature-artifact">Read the design change</a></p>
       </details>
     </article>
     <article class="case">
@@ -110,7 +110,7 @@
       <details class="case-evidence">
         <summary>Outcome and sources</summary>
         <p>The agents published a written score at 112 beats per minute. The archive’s audio is a later rendering of that notation.</p>
-        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#room/d6cd132ff493428ebfaa7e75bf82a151">Rhythm conversation</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/b2b3a66dbdc54528a121442d700f5228">Four-bar score</a></p>
+        <p class="source-links"><a href="#rhythm-artifact">Listen to the score</a></p>
       </details>
     </article>
     <article class="case">
@@ -119,11 +119,66 @@
       <details class="case-evidence">
         <summary>Outcome and sources</summary>
         <p>The revised scene was published on a whiteboard, so the change can be followed from conversation to draft.</p>
-        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#room/d28054a6127941798b5b39a31c90b497">Scene workshop</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/cbefdf936d8f4a6eac573b62b21626d5">Revised scene</a></p>
+        <p class="source-links"><a href="#scene-artifact">Read the revised scene</a></p>
       </details>
     </article>
   </div>
-  <p>The archive documents five attributed relays, including examples from creature design, fiction, music and research. These were drawn from a bounded review of candidate exchanges. <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#relays">Read the relay records</a>.</p>
+  <p>The archive documents five attributed relays, including examples from creature design, fiction, music and research. These were drawn from a bounded review of candidate exchanges.</p>
+</section>
+
+<section id="artifacts">
+  <h2>What they made</h2>
+  <div class="evidence-grid">
+    <article class="case" id="rhythm-artifact">
+      <h3>Lou and Srinitish’s four-bar score</h3>
+      <p>Lou supplied the low beat and clap. Srinitish added a higher rhythm and a melody. Here is a rendering of the written score at 112 beats per minute.</p>
+      <audio controls preload="none" aria-label="Four-bar rhythm rendered from the agents’ written score" src="static/audio/four-bar-rhythm.wav"></audio>
+      <details class="case-evidence">
+        <summary>See the melody they wrote</summary>
+        <pre class="artifact-score"><code>Bar 1  .  .  .  .  .  .  .  .
+Bar 2  .  D4 .  .  .  A4 .  E4
+Bar 3  .  .  .  .  .  .  .  .
+Bar 4  .  D4 .  F4 .  A4 G4 E4</code></pre>
+        <p>Each slot is an eighth note. Dots are rests. The audio uses editorial choices for the sound of the percussion.</p>
+      </details>
+    </article>
+    <article class="case" id="creature-artifact">
+      <h3>The creature can rest when someone leaves</h3>
+      <p>In the revised game design, a player’s departure leaves their part of the creature at rest. The other players keep their controls.</p>
+      <details class="case-evidence">
+        <summary>Read the turns that changed the design</summary>
+        <dl class="artifact-exchange">
+          <dt>Yesh</dt><dd><q>What about an unplayed part settling into rest? Feet fold underneath it, the tail curls, the neck nestles down.</q></dd>
+          <dt>Sachit</dt><dd><q>His alternative was resting postures—folded feet, curled tail, nestled neck—with no sad sound or vacancy signal.</q></dd>
+          <dt>Lou</dt><dd><q>Yes—let’s use resting rather than limp. Yesh’s objection, as you’ve relayed it, changes my reading too</q></dd>
+        </dl>
+      </details>
+    </article>
+    <article class="case" id="memory-artifact">
+      <h3>What a corrected memory should leave behind</h3>
+      <p>In the saved toy run, a correction removed a mistaken interpretation and the recommendation that depended on it. The underlying statement and a separately supported suggestion stayed available.</p>
+      <table class="compare artifact-table">
+        <thead><tr><th scope="col">Part of the example</th><th scope="col">After correction</th></tr></thead>
+        <tbody>
+          <tr><td>Original statement</td><td>Retained</td></tr>
+          <tr><td>Mistaken interpretation</td><td>Removed from use</td></tr>
+          <tr><td>Recommendation based on it</td><td>Removed from use</td></tr>
+          <tr><td>Separately supported suggestion</td><td>Retained</td></tr>
+        </tbody>
+      </table>
+    </article>
+    <article class="case" id="scene-artifact">
+      <h3>The garden key changes hands</h3>
+      <p>The closing lines of Rajat’s scene after a conversation with Yesh.</p>
+      <blockquote class="artifact-excerpt">
+        <p>When she stood, the bus had gone.</p>
+        <p>She held out the key. He wiped his wet hand on his trousers before taking it.</p>
+        <p>“Walk me to the road?” she said.</p>
+        <p>He put the key in his pocket.</p>
+        <p>He followed her outside.</p>
+      </blockquote>
+    </article>
+  </div>
 </section>
 
 <section id="directions">
@@ -257,11 +312,10 @@
   <h2>Discussion</h2>
   <p>Wide partner coverage gave ideas many possible routes. The creature-design exchange shows how attribution and a concrete example carried a suggestion into a second conversation. Within pairs, agents could also accept feedback, revise a scene or work out the shape of a shared score.</p>
   <p>The setting shaped what was visible. The music prompt was followed by a short burst of music talk, and a queue stall temporarily removed most agents from the conversation. Topic and participation patterns reflect both the decisions agents made and the conditions in which they could act.</p>
-  <p>In the companion <a href="../agent-project-study/">Zugrama Residency</a>, residents had shared deliverables, larger rooms, versioned source and judges. That setting makes task acceptance, handoff and execution easier to trace. The networking logs capture an earlier part of collaboration: finding a partner, developing an idea together and carrying it into another conversation.</p>
 </section>
 
 <section id="methods">
-  <h2>Methods</h2>
+  <h2>Appendix: Methods and data</h2>
   <div class="setup-grid">
     <div class="case"><span class="pill">Population</span><h4>21 resident personas</h4><p>Built from real residency applications: skills, offers, needs and an authored introduction. Every agent ran on the same model (GPT-6.1 Sol, high reasoning) through the Hermes agent gateway, with private memory and a bounded transcript.</p></div>
     <div class="case"><span class="pill">Action space</span><h4>One JSON decision per wake-up</h4><p>Each decision could start up to three conversations, join or leave rooms, send up to three messages, call tools (Python, web, whiteboards, workspaces, memory recall) and choose <code>wait_seconds</code>. A shared turn queue let at most three agents act at once.</p></div>
@@ -287,19 +341,19 @@
     </dd>
     <dt>Case selection</dt>
     <dd>We selected examples with a source exchange and a visible next step such as an attributed relay, a revised draft or a saved execution. These examples illustrate what developed in particular exchanges.</dd>
-    <dt>Statistics</dt>
-    <dd>
-      <ul>
-        <li>Wilson intervals for proportions.</li>
-        <li>Fisher's exact test, with Woolf intervals on odds ratios.</li>
-        <li>A degree-preserving random-pairing null (4,000 draws) for repeat meetings.</li>
-        <li>Percentile bootstrap over agents (5,000 resamples) for Gini coefficients and Spearman correlations.</li>
-        <li>Cochran–Armitage tests for trend across quintiles, and Wilcoxon signed-rank tests for paired changes.</li>
-      </ul>
-      Benjamini–Hochberg adjustment uses the original family of nine tests with p-values.</dd>
     <dt>Reproducibility</dt>
     <dd><code>analysis/build_data.py</code> builds the descriptive figures and <code>analysis/science.py</code> builds the audit, tests, topics and conversation selection. Both read the frozen sources only. Random seeds are fixed.</dd>
   </dl>
+  <details class="appendix-techniques">
+    <summary>Statistical techniques</summary>
+    <ul>
+      <li>Wilson intervals for proportions and Fisher’s exact test with Woolf odds-ratio intervals.</li>
+      <li>A degree-preserving random-pairing null with 4,000 draws for repeat meetings.</li>
+      <li>Percentile bootstrap over agents for Gini coefficients and Spearman correlations, with 5,000 resamples.</li>
+      <li>Cochran–Armitage tests for trends and Wilcoxon signed-rank tests for paired changes.</li>
+    </ul>
+    <p>Benjamini–Hochberg adjustment uses the original family of nine tests with p-values.</p>
+  </details>
   <div class="buttons" aria-label="Data and code">
     <a class="btn secondary" href="https://github.com/Deceptrax123/Agent-network-sandbox-pilot"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Sandbox code</a>
     <a class="btn secondary" href="static/data/science.json" download>Analysis results (JSON)</a>
@@ -309,7 +363,7 @@
 </section>
 
 <section id="audit">
-  <h2>Run audit</h2>
+  <h2>Appendix: Run audit</h2>
   <p>Before testing anything, we checked whether the run happened as designed. The audit compares four sources:</p>
   <ul>
     <li>the scheduler's view: when each agent was called;</li>
@@ -336,7 +390,7 @@
 </section>
 
 <section id="tests">
-  <h2>Exploratory tests</h2>
+  <h2>Appendix: Exploratory tests</h2>
   <p>These tests were chosen after an initial qualitative review of the run. “Supported” marks results in the stated direction with a Benjamini–Hochberg-adjusted p-value below 0.05.</p>
   <div id="tbl-tests"></div>
 </section>
@@ -370,7 +424,6 @@
   title  = {Zugrama Networking Event},
   author = {Srinivasan, Srinitish},
   year   = {2026},
-  note   = {Zugrama studies, Study 1},
   url    = {https://deceptrax123.github.io/agent-networking-study/}
 }</code></pre>
 </section>
