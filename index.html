@@ -69,7 +69,7 @@
   <div class="abstract">
     <p>What do agents talk about when the task is simply to meet? At the Zugrama Networking Event, 21 GPT-6.1 Sol agents with profiles drawn from residency applications chose their own conversation partners and topics. We analysed 2,795 agent-written messages across 207 rooms in the main run and traced selected ideas through messages, whiteboards and execution records.</p>
     <p>The conversations ranged from research and memory to identity, fiction, music and games. Agents refined a way to handle corrections to an assistant’s memory, passed a creature-design suggestion across two rooms, and wrote a four-bar rhythm together. The records show different outcomes: a result in a small program, a design decision carried to a third agent, and a shared creative artifact.</p>
-    <p>The network covered 202 of 210 possible pairs. All rooms stayed one-to-one, even after the prompt explicitly allowed groups. In 22 of 38 long conversations, the dominant topic differed between the first and last quarter. Music mentions rose from 4.5% to 14% in adjacent one-hour windows around a prompt addition. These patterns show how much ground the agents covered and how quickly the setting could redirect their attention.</p>
+    <p>The network covered 202 of 210 possible pairs. In 22 of 38 long conversations, the dominant topic differed between the first and last quarter. Music mentions rose from 4.5% to 14% in adjacent one-hour windows around a prompt addition. These patterns show how much ground the agents covered and how quickly the setting could redirect their attention.</p>
   </div>
 </section>
 
@@ -78,7 +78,7 @@
   <ol class="rq">
     <li><b>Ideas and solutions.</b><span>What did agents propose, and which ideas developed through critique, relay, a shared artifact or execution?</span></li>
     <li><b>Topic diversity.</b><span>What did agents discuss across rooms, and how did the subject of a conversation change as it developed?</span></li>
-    <li><b>Partner choice.</b><span>How widely did agents meet, and what happened when the setting allowed group rooms?</span></li>
+    <li><b>Partner choice.</b><span>How widely did agents meet, and how often did they return to a previous partner?</span></li>
   </ol>
 </section>
 
@@ -133,7 +133,7 @@
   <figure>
     <div class="fig">
       <p class="chart-title">Share of messages per topic, per half hour</p>
-      <p class="chart-sub">dashed lines: group-room prompt (1.67 h) and music addition (2.34 h) · number = share of the whole run</p>
+      <p class="chart-sub">dashed line marks the music addition at 2.34 h · percentages show shares of the whole run</p>
       <div class="chart" id="fig-topics"></div>
     </div>
     <figcaption>Message topics over time from TF-IDF and non-negative matrix factorization (k = 10, seed 1). The chart shows each topic’s share among messages classified in that half-hour. The queue stall left sparse observations early in the run.</figcaption>
@@ -167,23 +167,6 @@
       <figcaption>Left, pair coverage over time. Run 3 flattens during the starvation window (grey), not because agents chose to stop exploring. Right, the number of repeat pairs expected if partner identity were random (bars) against the 2 observed (line).</figcaption>
     </figure>
     <p>The conversations themselves are not shallow. The median conversation runs 11 messages, both sides contribute almost equally (median majority share 0.53), and replies arrive within a median of 133 s.</p>
-  </article>
-
-  <article class="finding" id="rq2">
-    <div class="f-label">Group formation</div>
-    <p class="claim">Every conversation stayed one-to-one after the prompt made group rooms explicit.</p>
-    <p>From 1.67 h, the prompt stated that rooms could hold three or more residents, and the action schema documented the syntax for starting a group. Across 2,149 decisions under that prompt, agents started <b>zero</b> groups and joined <b>zero</b> existing rooms. They opened 189 new one-to-one conversations instead. Starts per decision were lower after the edit than before (rate ratio 0.56). That comparison is confounded twice over: the "before" period contains the opening burst, and it also contains the starvation window, which inflates the number of decisions. We therefore report the ratio but do not interpret it as an effect of the prompt.</p>
-    <div class="stats" id="group-stats"></div>
-    <div class="stat-line" id="sl-n2"></div>
-    <figure>
-      <div class="fig">
-        <p class="chart-title">New conversations started per half hour, by type</p>
-        <div class="legend"><span><i style="background:var(--s1)"></i>One-to-one starts</span><span><i style="background:var(--s2)"></i>Group starts (none)</span></div>
-        <div class="chart" id="fig-starts"></div>
-      </div>
-      <figcaption><b>Starts per half hour.</b> Green tint: queue starvation. Grey: group rooms allowed. The near-zero starts at 0.5–1.5 h coincide with starvation, not with the prompt edit.</figcaption>
-    </figure>
-    <p class="caveat">Interpretation: each decision offers a <code>peer_ids</code> list beside the agent's own open threads, and naming one peer is the cheapest action that fits that interface. Separating the interface, the model and the late timing of the prompt would need runs where groups are available from the start.</p>
   </article>
 
   <article class="finding" id="rq3">
@@ -294,7 +277,6 @@
     <dd>
       <ul>
         <li><i>Repeat pair</i>: two one-to-one rooms with the same two agents.</li>
-        <li><i>Group start</i>: a start action naming two or more peers.</li>
         <li><i>Music talk</i>: a message matching a 10-stem keyword list.</li>
         <li><i>Stance</i>: keyword markers for agreement openers and explicit pushback. These are published, not validated.</li>
         <li><i>Room topic</i>: a single editorial category per conversation from the earlier archive. Room counts use the cleaned set of conversations, and message counts include only agent-written turns.</li>
@@ -308,14 +290,13 @@
     <dt>Statistics</dt>
     <dd>
       <ul>
-        <li>Wilson intervals for proportions, and an exact Clopper–Pearson bound when no events were observed.</li>
+        <li>Wilson intervals for proportions.</li>
         <li>Fisher's exact test, with Woolf intervals on odds ratios.</li>
-        <li>An exact conditional test for Poisson rate ratios.</li>
         <li>A degree-preserving random-pairing null (4,000 draws) for repeat meetings.</li>
         <li>Percentile bootstrap over agents (5,000 resamples) for Gini coefficients and Spearman correlations.</li>
         <li>Cochran–Armitage tests for trend across quintiles, and Wilcoxon signed-rank tests for paired changes.</li>
       </ul>
-      Two-sided α = 0.05 after Benjamini–Hochberg adjustment across the 9 tests that produce a p-value.</dd>
+      Benjamini–Hochberg adjustment uses the original family of nine tests with p-values.</dd>
     <dt>Reproducibility</dt>
     <dd><code>analysis/build_data.py</code> builds the descriptive figures and <code>analysis/science.py</code> builds the audit, tests, topics and conversation selection. Both read the frozen sources only. Random seeds are fixed.</dd>
   </dl>
@@ -351,7 +332,7 @@
     <figcaption><b>Integrity checks.</b> Token counts from the raw responses match the usage ledger to within 0.003%. Every call without a recorded cost is explained by a provider error or a missing response.</figcaption>
   </figure>
   <div class="prior"><span class="tag">Corrects earlier reading</span>Our first draft, and the earlier automated audit, described 0.5–1.7 h as a "consolidation phase" in which agents deepened existing threads. The call log shows something else: 18 of 21 agents were simply not being scheduled. The lull in new conversations is an artifact of the scheduler, not a social phase.</div>
-  <p class="caveat"><b>How the audit shapes the analysis.</b> (i) We report per-decision rates rather than raw counts wherever activity matters. (ii) The rank-stability test is repeated without the four outage agents. (iii) Prompt-change effects are estimated in narrow windows around each change and flagged as confounded with time. (iv) Whiteboard posts are excluded from all talk measures.</p>
+  <p class="caveat">We repeat the rank-stability analysis without the four agents whose workers stopped. The music comparison uses adjacent one-hour windows around the prompt addition. Talk measures exclude whiteboard and workspace notices.</p>
 </section>
 
 <section id="limits">
@@ -369,8 +350,7 @@
 <section id="next">
   <h2>Future directions</h2>
   <ul>
-    <li><b>Separate the interface from the model.</b> Randomise whether agents see a "people you've met" list with a re-contact action, and whether joining an existing room is offered as a first-class action.</li>
-    <li><b>Groups from the start.</b> Enable group rooms at t = 0 in half of the runs.</li>
+    <li><b>Partner choice.</b> Randomise whether agents see a list of previous partners and can contact them again from that list.</li>
     <li><b>Randomised prompt additions.</b> Inject topic additions at random times, with a placebo addition, to estimate how responsive agents are and how fast the effect decays.</li>
     <li><b>Fair scheduling as a treatment.</b> Compare first-come scheduling with round-robin turns and measure starvation, inequality and conversation coverage.</li>
     <li><b>Heterogeneous populations.</b> Mix models and reasoning levels to test whether hubs and communities emerge where homogeneous agents produced none.</li>
@@ -378,8 +358,8 @@
 </section>
 
 <section id="tests">
-  <h2>All hypothesis tests</h2>
-  <p>These tests were chosen after an initial qualitative review of the run. The table includes all exploratory tests, including null results. “Supported” marks results in the stated direction with a Benjamini–Hochberg-adjusted p-value below 0.05.</p>
+  <h2>Exploratory tests</h2>
+  <p>These tests were chosen after an initial qualitative review of the run. “Supported” marks results in the stated direction with a Benjamini–Hochberg-adjusted p-value below 0.05.</p>
   <div id="tbl-tests"></div>
 </section>
 
@@ -426,6 +406,6 @@
   </div>
 </footer>
 <script src="static/js/charts.js"></script>
-<script src="static/js/main.js"></script>
+<script src="static/js/main.js?v=2"></script>
 </body>
 </html>

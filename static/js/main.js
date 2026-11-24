@@ -46,22 +46,17 @@
     [`${r3.pairs_met}/${r3.pairs_possible}`, "possible pairs that met"],
     ["$" + D.cost.usd.toFixed(0), "API-equivalent spend"],
   ]);
-  tiles("group-stats", [
-    [fmt(D.decisions.group_prompt_decisions), "decisions with groups explicitly allowed"],
-    [D.decisions.group_prompt_group_starts, "group rooms started"],
-    [D.decisions.group_prompt_joins, "joins of an existing room"],
-    [fmt(D.decisions.group_prompt_dm_starts), "new one-to-one chats instead"],
-  ]);
   const sl = (id, t) => { $(id).textContent = `${t.test}: ${t.stat}` + (t.p != null ? `; p ${pfmt(t.p).startsWith("<") ? "" : "= "}${pfmt(t.p)}, BH-adjusted ${pfmt(t.p_bh)}` : "") + (t.ci && t.p == null ? "" : ""); };
-  sl("sl-n1", T.N1); sl("sl-n2", T.N2); sl("sl-n4", T.N4); sl("sl-n7", T.N7); sl("sl-n8", T.N8);
+  sl("sl-n1", T.N1); sl("sl-n4", T.N4); sl("sl-n7", T.N7); sl("sl-n8", T.N8);
 
   // ---------- audit cards + table ----------
   const outage4 = AU.lanes.filter((l) => l.outage_h >= 2.5).sort((a, b) => a.outages.at(-1)[0] - b.outages.at(-1)[0]);
   const py = AU.tool_runs.find((t) => t.tool === "python_run"), web = AU.tool_runs.find((t) => t.tool === "web_read");
+  const promptChanges = AU.interventions.map((entry, i) => ({ ...entry, short: i === 0 ? "prompt edit" : "music added" }));
   const items = [
     ["sev-high", "High", "Turn-queue starvation", `${starve.from.toFixed(2)}–${starve.to.toFixed(2)} h: ${starve.holders.join(", ")} made ${starve.calls} consecutive calls (${starve.python} Python, ${starve.wait0} with a 0 s wait, ${starve.messages} messages). The other 18 agents could not act for about 50 minutes.`],
     ["sev-high", "High", "Provider outages", `${outage4.map((l) => `${l.agent} (from ${l.outages.at(-1)[0].toFixed(1)} h)`).join(", ")} stopped after provider errors and were restarted only at 7.24 h, losing 2.7–4.0 h each. Model calls per agent range ${AU.calls_range[0]}–${AU.calls_range[1]}.`],
-    ["sev-mid", "Medium", "Two mid-run prompt changes", `${AU.interventions.map((i) => `${i.label} at ${i.h.toFixed(2)} h`).join("; ")}. Both are logged in the platform state file. Neither was randomised.`],
+    ["sev-mid", "Medium", "Two mid-run prompt changes", `The platform recorded a prompt edit at ${promptChanges[0].h.toFixed(2)} h and a music addition at ${X.music_series.at.toFixed(2)} h. Neither was randomised.`],
     ["sev-mid", "Medium", "Shorter outages late in the run", `${AU.lanes.filter((l) => l.outage_h > 0 && l.outage_h < 2.5).length} more agents went unscheduled for 20–60 min between 6.0 and 7.3 h. ${AU.restarts} worker restarts in total.`],
     ["sev-mid", "Medium", "Platform posts recorded as messages", `${AU.tool_posts} of ${fmt(AU.messages_total)} messages (${pct1(AU.tool_posts / AU.messages_total)}) are whiteboard or workspace publications posted under an agent's name. They are excluded from every talk measure.`],
     ["sev-ok", "OK", "Ledger reconciles with raw responses", `Raw responses: ${fmt(AU.audit_tokens.in)} input / ${fmt(AU.audit_tokens.out)} output tokens. Ledger: ${fmt(AU.usage_rows[0].in)} / ${fmt(AU.usage_rows[0].out)} (difference < 0.01%).`],
@@ -83,7 +78,7 @@
   // ---------- table: runs ----------
   const rows = [
     ["Duration (h)", (r) => r.hours.toFixed(1)], ["Messages", (r) => fmt(r.messages)], ["Populated rooms", (r) => fmt(r.rooms)],
-    ["Largest room (residents)", (r) => r.max_room_residents], ["Pairs met / 210", (r) => r.pairs_met],
+    ["Pairs met / 210", (r) => r.pairs_met],
     ["Directed density", (r) => r.density.toFixed(2)], ["Reciprocity", (r) => pct(r.reciprocity)],
     ["Clustering", (r) => r.clustering.toFixed(2)], ["Modularity (Louvain)", (r) => r.modularity.toFixed(2)],
     ["Gini of messages sent", (r) => r.gini_sent.toFixed(3)], ["Median words / message", (r) => r.words_median],
@@ -113,11 +108,10 @@
   const verdict = (t) => {
     if (t.id === "N10") return ["weak", "Detectable, negligible"];
     if (t.p == null) return ["est", "Estimate"];
-    if (t.id === "N3") return ["weak", "Changed (confounded)"];
     return t.p_bh < 0.05 ? ["yes", "Supported"] : ["no", "Not supported"];
   };
   $("tbl-tests").innerHTML = `<div class="table-wrap"><table class="compare tests"><thead><tr><th>ID</th><th>Hypothesis</th><th>Test</th><th>Result</th><th>p (BH)</th><th>Verdict</th></tr></thead><tbody>${
-    X.tests.slice().sort((a, b) => +a.id.slice(1) - +b.id.slice(1)).map((t) => { const [c, v] = verdict(t); return `<tr><td>${t.id}</td><td>${esc(t.claim)}</td><td>${esc(t.test)}</td><td>${esc(t.stat)}${t.note ? `<br><span class="muted" style="color:var(--muted);font-size:12.5px">${esc(t.note)}</span>` : ""}</td><td>${pfmt(t.p_bh)}</td><td><span class="verdict ${c}">${v}</span></td></tr>`; }).join("")
+    X.tests.filter((t) => t.id !== "N2" && t.id !== "N3").sort((a, b) => +a.id.slice(1) - +b.id.slice(1)).map((t) => { const [c, v] = verdict(t); return `<tr><td>${t.id}</td><td>${esc(t.claim)}</td><td>${esc(t.test)}</td><td>${esc(t.stat)}${t.note ? `<br><span class="muted" style="color:var(--muted);font-size:12.5px">${esc(t.note)}</span>` : ""}</td><td>${pfmt(t.p_bh)}</td><td><span class="verdict ${c}">${v}</span></td></tr>`; }).join("")
   }</tbody></table></div>`;
 
   // ---------- agents table ----------
@@ -141,7 +135,7 @@
     // Fig 2: swimlanes
     C.swimlanes($("fig-lanes"), {
       lanes: AU.lanes, xMax: AU.hours, stalls: AU.stalls,
-      interventions: AU.interventions.map((i, k) => ({ ...i, short: k ? "music added" : "groups allowed" })),
+      interventions: promptChanges,
       xLabel: "hours since start →", rowH: 16,
     });
 
@@ -161,24 +155,12 @@
       tipFmt: (d) => `<b>${d.k} repeat pairs</b><br>${fmt(d.n)} of 4,000 random draws`,
     });
 
-    // Fig 4: starts per half hour
-    C.bars($("fig-starts"), {
-      data: D.decisions.bins.map((b) => ({ ...b, label: b.h.toFixed(1) })), x: "label", keys: ["dm", "group"],
-      colors: ["--s1", "--s2"], names: ["One-to-one starts", "Group starts"], xLabel: "hour →", yLabel: "starts",
-      shade: [
-        { when: (d) => d.h + 0.5 > D.decisions.group_prompt_from_h, label: "group rooms allowed" },
-        { when: (d) => d.h >= starve.from - 0.01 && d.h < starve.to, label: "starved", color: "--s3", row: 1 },
-      ],
-      tipFmt: (d) => `<b>${d.h.toFixed(1)}–${(d.h + 0.5).toFixed(1)} h</b><br>${fmt(d.decisions)} decisions<br>one-to-one starts: ${d.dm}<br>group starts: ${d.group}<br>joins: ${d.join}`,
-      height: 240,
-    });
-
     // Fig 5: music ITS
     const mb = X.music_series.bins.filter((b) => b.n >= 20);
     C.line($("fig-music"), {
       series: [{ name: "music share", color: "--s1", values: mb.map((b) => [b.h + 0.125, b.share]) }],
       areas: [{ from: starve.from, to: starve.to, label: "starved" }],
-      markers: [{ x: X.music_series.at, label: "music added" }, { x: D.decisions.group_prompt_from_h, label: "groups allowed", row: 1 }],
+      markers: [{ x: X.music_series.at, label: "music added" }],
       xLabel: "hours since start →", yFormat: d3.format(".0%"), xFormat: d3.format(".2f"), yMax: 0.35, height: 260, directLabels: false,
     });
     const svg = d3.select($("fig-music")).select("svg g");
@@ -228,7 +210,7 @@
 
     // Fig 9: topic multiples
     C.multiples($("fig-topics"), {
-      series: X.topics.series, xMax: Math.floor(AU.hours * 2) / 2, markers: [D.decisions.group_prompt_from_h, X.music_series.at], minW: 210, height: 104,
+      series: X.topics.series, xMax: Math.floor(AU.hours * 2) / 2, markers: [X.music_series.at], minW: 210, height: 104,
     });
 
     // Fig 10: labour
