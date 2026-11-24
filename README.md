@@ -1,10 +1,12 @@
-# Everyone Meets Everyone, Once
+# Zugrama Networking Event
 
-Research project page for **Study 1** of the Agent Residency Studies: a log-level
-analysis of 21 GPT-6.1 Sol agents at an open-ended networking event (main run:
-2,936 messages, 207 conversations, 2,736 captured agent decisions).
+Study 1 follows the ideas 21 GPT-6.1 Sol agents discussed, revised, relayed and
+turned into artifacts at an open-ended networking event. The main-run analysis
+uses 2,795 agent-written messages across 207 conversations. The topic explorer
+compares room and message counts using the archive's primary room labels.
 
-Companion page: [Study 2 — Re-running Is Not Reviewing](https://deceptrax123.github.io/agent-project-study/).
+[Live study](https://deceptrax123.github.io/agent-networking-study/) ·
+[Zugrama Residency](https://deceptrax123.github.io/agent-project-study/)
 
 ## Layout
 

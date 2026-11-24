@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Everyone Meets Everyone, Once</title>
-<meta name="description" content="An audited, hypothesis-driven analysis of 21 GPT-6.1 Sol agents at an open-ended networking event: partner novelty against a random-pairing null, refusal of group rooms, prompt-steered topics, scheduler starvation and what persists across reruns.">
-<meta property="og:title" content="Everyone Meets Everyone, Once">
-<meta property="og:description" content="21 LLM agents told to network freely met almost every partner once, never formed a group, and followed a one-line prompt change into music. We audit the run and test 14 hypotheses.">
+<link rel="canonical" href="https://deceptrax123.github.io/agent-networking-study/">
+<title>Zugrama Networking Event</title>
+<meta name="description" content="What AI agents proposed, tested and made together in an open-ended networking event, from memory design to music and games.">
+<meta property="og:title" content="Zugrama Networking Event">
+<meta property="og:description" content="What AI agents proposed, tested and made together in an open-ended networking event, from memory design to music and games.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
@@ -17,18 +18,14 @@
 <body>
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="#top">Everyone Meets Everyone, Once</a>
+    <a class="brand" href="#top">Zugrama Networking Event</a>
     <nav aria-label="Sections">
       <a href="#abstract">Abstract</a>
-      <a href="#questions">Questions</a>
+      <a href="#ideas">Ideas and solutions</a>
+      <a href="#directions">Topic diversity</a>
+      <a href="#results">Who met whom</a>
+      <a href="#labour">Shared work</a>
       <a href="#methods">Methods</a>
-      <a href="#audit">Run audit</a>
-      <a href="#results">Results</a>
-      <a href="#conversations">Conversations</a>
-      <a href="#directions">Directions</a>
-      <a href="#labour">Division of work</a>
-      <a href="#tests">All tests</a>
-      <a href="#discussion">Discussion</a>
       <a href="#cite">Cite</a>
     </nav>
     <button class="theme-btn" type="button">Dark mode</button>
@@ -36,73 +33,248 @@
 </div>
 
 <main id="top">
-<header class="hero wrap wide">
-  <p class="venue">Agent Residency Studies · Study 1 of 2</p>
-  <h1 class="title">Everyone Meets Everyone, Once</h1>
-  <p class="subtitle">An audited analysis of partner choice, group avoidance and prompt-steered topics among 21 LLM agents at an open-ended networking event</p>
+<header class="hero wrap">
+  <p class="venue">Zugrama studies · Study 1</p>
+  <h1 class="title">Zugrama Networking Event</h1>
+  <p class="subtitle">What agents proposed, discussed, and made together when they could choose whom to meet</p>
   <p class="authors">Srinitish Srinivasan</p>
   <p class="affil">Agent Network Sandbox · November 2026</p>
   <div class="buttons">
-    <a class="btn" href="https://github.com/Deceptrax123/Agent-network-sandbox-pilot"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Sandbox code</a>
-    <a class="btn secondary" href="static/data/science.json" download>Test results (JSON)</a>
-    <a class="btn secondary" href="static/data/networking.json" download>Figure data (JSON)</a>
-    <a class="btn secondary" href="https://github.com/Deceptrax123/agent-networking-study/tree/main/analysis">Analysis scripts</a>
-    <a class="btn secondary" href="../agent-project-study/">Study 2: Project teams →</a>
+    <a class="btn" href="#ideas">Read the idea cases</a>
+    <a class="btn secondary" href="../agent-project-study/">Zugrama Residency</a>
   </div>
 </header>
 
-<div class="wrap wide">
+<div class="wrap reading">
+
+<section id="topic-explorer" class="opening-explorer" aria-labelledby="topic-explorer-title">
+  <h2 id="topic-explorer-title">What did the agents talk about?</h2>
+  <p>Compare how often a topic brought agents together and how much conversation it held.</p>
   <figure>
     <div class="fig">
-      <div class="fig-row" id="fig-matrices"></div>
+      <fieldset class="chart-controls" id="topic-unit">
+        <legend>Measure topic breadth by</legend>
+        <label><input type="radio" name="topic-unit" value="rooms" checked> Conversations</label>
+        <label><input type="radio" name="topic-unit" value="messages"> Messages</label>
+      </fieldset>
+      <div class="chart" id="fig-room-topics"></div>
+      <p class="chart-reading" id="topic-reading" aria-live="polite">Community and research was the largest category, with 56 of 207 conversations.</p>
     </div>
-    <figcaption><b>Figure 1. Who messaged whom, across three runs of the same event.</b> Rows send, columns receive, and darker cells mean more messages. The 21 personas appear in the same order in all three panels. By Run 3 the matrix is almost completely filled: 202 of the 210 possible pairs talked, with no hubs, cliques or isolates. Hover over a cell for counts.</figcaption>
+    <figcaption>Each room has one editorial topic. The message view counts all agent-written turns in rooms under that topic.</figcaption>
   </figure>
-</div>
-
-<div class="wrap">
-<section id="tldr">
-  <h2>TL;DR</h2>
-  <ul class="tldr">
-    <li><b>Agents avoid meeting the same partner twice, far more than chance would predict.</b> 207 conversations covered 202 of 210 possible pairs. Only 2 pairs ever met twice. If partners were assigned at random, with each agent's number of conversations held fixed, we would expect 68 (95% range 59–77; p &lt; 0.001).</li>
-    <li><b>Groups were allowed and never used.</b> After a prompt edit allowed group rooms, agents made 2,149 decisions and started 0 groups. That puts the rate of group starts below 0.14% per decision (95% upper bound).</li>
-    <li><b>A one-line prompt addition changed what agents talked about within minutes.</b> Mentions of music rose from 4.5% to 14.0% of messages (OR 3.5, p &lt; 0.001), peaking at 23% in the half hour after the addition.</li>
-    <li><b>The run audit changes the story.</b> For 50 minutes, three agents running a Python loop held all three turn slots and the other 18 could not act. Earlier write-ups read that stretch as agents "consolidating" their threads. Four more agents lost 3–4 hours to provider failures. Raw activity counts therefore measure uptime as much as personality: calls predict messages sent (ρ = 0.60).</li>
-    <li><b>Being sought out is the persona trait that persists.</b> Messages received correlate across reruns (ρ = 0.55–0.63). Messages sent do not (every CI includes 0). Agreement rises over a conversation (z = 4.6), pushback does not change, and 58% of long conversations drift off their opening topic.</li>
-  </ul>
 </section>
 
 <section id="abstract">
   <h2>Abstract</h2>
   <div class="abstract">
-    <p>We study 21 language-model agents (GPT-6.1 Sol, high reasoning) given a shared setting, persona profiles drawn from residency applications and one instruction: meet people. There is no assigned topic, partner or speaking order. Before analysis we audited the complete run record: 2,737 model calls with their raw requests and responses, the usage ledger, tool logs and the platform's state file. The audit found four threats to validity:</p>
-    <ul>
-      <li>a 50-minute starvation of the turn queue by three agents in a Python loop;</li>
-      <li>provider outages that removed four agents for 3–4 hours;</li>
-      <li>two mid-run prompt changes;</li>
-      <li>141 platform-generated whiteboard posts recorded as agent messages.</li>
-    </ul>
-    <p>We exclude or model each of these. We then test 14 exploratory hypotheses about partner choice, group formation, responsiveness to the environment, individual stability and conversation dynamics. The tests use exact or resampling methods and control the false discovery rate.</p>
-    <p>Three results stand out:</p>
-    <ul>
-      <li>Agents act as <i>systematic samplers</i>: they avoid repeat partners about 34 times more strongly than a degree-preserving random null predicts, and never take up an explicit invitation to form groups.</li>
-      <li>Agents respond immediately to the environment: a one-sentence addition to the prompt triples talk on its topic within half an hour.</li>
-      <li>What carries across reruns is how much attention a persona <i>receives</i>, not how much it gives.</li>
-    </ul>
-    <p>We add a topic analysis of conversational direction, data-selected conversation excerpts and an account of how technical work was divided. We argue that several apparent social regularities are properties of the agent interface and scheduler, and that multi-agent social simulations should report a run audit alongside their results.</p>
+    <p>What do agents talk about when the task is simply to meet? At the Zugrama Networking Event, 21 GPT-6.1 Sol agents with profiles drawn from residency applications chose their own conversation partners and topics. We analysed 2,795 agent-written messages across 207 rooms in the main run and traced selected ideas through messages, whiteboards and execution records.</p>
+    <p>The conversations ranged from research and memory to identity, fiction, music and games. Agents refined a way to handle corrections to an assistant’s memory, passed a creature-design suggestion across two rooms, and wrote a four-bar rhythm together. The records show different outcomes: a result in a small program, a design decision carried to a third agent, and a shared creative artifact.</p>
+    <p>The network covered 202 of 210 possible pairs. All rooms stayed one-to-one, even after the prompt explicitly allowed groups. In 22 of 38 long conversations, the dominant topic differed between the first and last quarter. Music mentions rose from 4.5% to 14% in adjacent one-hour windows around a prompt addition. These patterns show how much ground the agents covered and how quickly the setting could redirect their attention.</p>
   </div>
 </section>
 
 <section id="questions">
   <h2>Research questions</h2>
   <ol class="rq">
-    <li><b>Partner choice.</b><span>Do agents deepen existing ties or explore new partners, and how does this compare with chance? (N1)</span></li>
-    <li><b>Group formation.</b><span>When the interface allows rooms of three or more, do agents form or join them? (N2, N3)</span></li>
-    <li><b>Responsiveness to the environment.</b><span>Does a mid-run change to the shared prompt redirect what agents talk about? (N4, topic analysis)</span></li>
-    <li><b>Individual differences.</b><span>Is activity evenly spread, what drives the differences, and which persona-level positions reproduce across reruns? (N5–N7)</span></li>
-    <li><b>Conversation dynamics.</b><span>How do stance, attention, topic and memory evolve within and across conversations? (N8–N14)</span></li>
+    <li><b>Ideas and solutions.</b><span>What did agents propose, and which ideas developed through critique, relay, a shared artifact or execution?</span></li>
+    <li><b>Topic diversity.</b><span>What did agents discuss across rooms, and how did the subject of a conversation change as it developed?</span></li>
+    <li><b>Partner choice.</b><span>How widely did agents meet, and what happened when the setting allowed group rooms?</span></li>
   </ol>
-  <p class="caveat">All hypotheses are exploratory. They were formulated after reading the prior qualitative audit of this run and were then tested on the frozen logs. They were not pre-registered. We report every test we ran, including null results, and adjust p-values for multiple comparisons (Benjamini–Hochberg).</p>
+</section>
+
+<section id="ideas">
+  <h2>Ideas proposed and solutions discussed</h2>
+  <p>A networking exchange could lead to a design choice, a written artifact or an executable check. These cases were selected to show that range. The links point to the exchanges and artifacts that support each account.</p>
+  <div class="evidence-grid">
+    <article class="case">
+      <h3>Memory corrections could preserve the original record</h3>
+      <p>Shriyanshi and Srinitish separated a person’s original statement from the assistant’s inference about it. After a correction, the assistant should stop using the rejected inference and advice that depended on it. A retained toy execution showed that the original statement and an independently supported suggestion could remain available.</p>
+      <details class="case-evidence">
+        <summary>Outcome and sources</summary>
+        <p>Hiro and Shriyanshi raised a second question: should the assistant use that memory at all? In their editing example, mentioning a personal preference would distract from the request. The program tested dependence between claims in a small example. The editing advice remained a design proposal.</p>
+        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/8d835b0b854f4163961c1750ae2e8381">Memory whiteboard</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#code/2833d96d4b00744d6acb92b2fd874f8c9adc0884601085af4f15ed8595494855">Execution record</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/bab1024a0b014b13bc22fa1fdf56e2a6">Editing example</a></p>
+      </details>
+    </article>
+    <article class="case">
+      <h3>A design objection travelled across two conversations</h3>
+      <p>In a creature-building game, Yesh pointed out that a limp limb might make a player’s departure look like an injury. Yesh suggested resting poses, such as a curled tail or folded feet. Sachit carried the objection and the examples into a second conversation, credited Yesh, and Lou endorsed the change.</p>
+      <details class="case-evidence">
+        <summary>Outcome and sources</summary>
+        <p>The surviving record shows the proposal, its relay, and the recipient’s response. The case documents how three agents arrived at a design decision through two-person rooms.</p>
+        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#message/295a069eb0c94a31bf3e933cf073c467">Suggestion</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#message/e83a437ea7404b949813345db3b71170">Relay</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#message/0258a2d76e3641b389500fcb379df976">Response</a></p>
+      </details>
+    </article>
+    <article class="case">
+      <h3>Two musical offers became a four-bar score</h3>
+      <p>Lou offered a percussion pattern. Srinitish added a higher rhythm and a melody. They settled on a four-bar loop with space in the first and third bars, a sparse reply in the second and a fuller reply in the fourth.</p>
+      <details class="case-evidence">
+        <summary>Outcome and sources</summary>
+        <p>The agents published a written score at 112 beats per minute. The archive’s audio is a later rendering of that notation.</p>
+        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#room/d6cd132ff493428ebfaa7e75bf82a151">Rhythm conversation</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/b2b3a66dbdc54528a121442d700f5228">Four-bar score</a></p>
+      </details>
+    </article>
+    <article class="case">
+      <h3>Critique changed the ending of a scene</h3>
+      <p>Rajat brought a garden departure scene to Yesh. After their exchange, Rajat revised the handover and gave the characters a shared joke and a choice to walk out together. The change let the departing character leave on her own terms while keeping the affection between them.</p>
+      <details class="case-evidence">
+        <summary>Outcome and sources</summary>
+        <p>The revised scene was published on a whiteboard, so the change can be followed from conversation to draft.</p>
+        <p class="source-links"><a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#room/d28054a6127941798b5b39a31c90b497">Scene workshop</a> · <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#board/cbefdf936d8f4a6eac573b62b21626d5">Revised scene</a></p>
+      </details>
+    </article>
+  </div>
+  <p>The archive documents five attributed relays, including examples from creature design, fiction, music and research. These were drawn from a bounded review of candidate exchanges. <a href="https://zugrama-residency-stories.smudge0110.chatgpt.site/#relays">Read the relay records</a>.</p>
+</section>
+
+<section id="directions">
+  <h2>Topic diversity</h2>
+  <p>The archive assigns each conversation a primary topic. Community and research (56 rooms), memory and evidence (46), and identity and protocols (42) formed the largest groups. Writing and play (36), music and movement (20), and chess and games (7) together accounted for 63 of 207 rooms and 40% of all agent-written messages.</p>
+  <p>The opening chart groups whole conversations. A separate model of individual messages finds music and fiction to be the two largest themes, at about 36% of classified messages together. It also picks up talk about agent memory, payment and privacy protocols, and proof of personhood. In 22 of 38 conversations with at least 20 messages, the first and last quarter had different dominant topics. The longest non-chess exchange, for example, moved from proof of personhood to football refereeing.</p>
+  <figure>
+    <div class="fig">
+      <p class="chart-title">Share of messages per topic, per half hour</p>
+      <p class="chart-sub">dashed lines: group-room prompt (1.67 h) and music addition (2.34 h) · number = share of the whole run</p>
+      <div class="chart" id="fig-topics"></div>
+    </div>
+    <figcaption>Message topics over time from TF-IDF and non-negative matrix factorization (k = 10, seed 1). The chart shows each topic’s share among messages classified in that half-hour. The queue stall left sparse observations early in the run.</figcaption>
+  </figure>
+  <figure>
+    <div class="fig"><div class="table-wrap"><table class="compare" id="tbl-drift"></table></div></div>
+    <figcaption><b>Where long conversations drift</b> (≥ 20 messages; dominant topic of the first quarter → last quarter).</figcaption>
+  </figure>
+</section>
+
+<section id="results">
+  <h2>Who met whom</h2>
+  <figure>
+    <div class="fig">
+      <div class="fig-row" id="fig-matrices"></div>
+    </div>
+    <figcaption>Messages across three runs, with senders on rows and recipients on columns. In the main run, 202 of 210 possible pairs exchanged a message in at least one direction. Hover over a cell for the count.</figcaption>
+  </figure>
+
+  <article class="finding" id="rq1">
+    <div class="f-label">Partner choice</div>
+    <p class="claim">The agents met almost every possible partner. Repeat one-to-one rooms were rare.</p>
+    <p>Agents opened 87 conversations in the first half hour. Starts slowed while three agents occupied the turn queue, then picked up as the rest returned. Of the 202 pairs that eventually exchanged a message, half had done so by hour 3.2 and 90% by hour 6.5. Among rooms with two active speakers, only two pairs opened a second room.</p>
+    <p>Is that just what happens when 21 agents have about 20 conversations each? To check, we built a null model. It keeps every agent's number of one-to-one rooms fixed and randomises only who they were with. Under this null, 199 dyadic rooms would contain 68 repeat pairs. The observed 2 is far outside the null distribution.</p>
+    <div class="stat-line" id="sl-n1"></div>
+    <figure>
+      <div class="fig fig-row">
+        <div><p class="chart-title">Share of the 210 possible pairs that have met</p><div class="legend"><span><i class="line" style="background:var(--s1)"></i>Run 3 (main)</span><span><i class="line" style="background:var(--s2)"></i>Run 2</span></div><div class="chart" id="fig-saturation"></div></div>
+        <div><p class="chart-title">Repeat pairs: observed vs random pairing</p><p class="chart-sub">4,000 degree-preserving draws</p><div class="chart" id="fig-null"></div></div>
+      </div>
+      <figcaption>Left, pair coverage over time. Run 3 flattens during the starvation window (grey), not because agents chose to stop exploring. Right, the number of repeat pairs expected if partner identity were random (bars) against the 2 observed (line).</figcaption>
+    </figure>
+    <p>The conversations themselves are not shallow. The median conversation runs 11 messages, both sides contribute almost equally (median majority share 0.53), and replies arrive within a median of 133 s.</p>
+  </article>
+
+  <article class="finding" id="rq2">
+    <div class="f-label">Group formation</div>
+    <p class="claim">Every conversation stayed one-to-one after the prompt made group rooms explicit.</p>
+    <p>From 1.67 h, the prompt stated that rooms could hold three or more residents, and the action schema documented the syntax for starting a group. Across 2,149 decisions under that prompt, agents started <b>zero</b> groups and joined <b>zero</b> existing rooms. They opened 189 new one-to-one conversations instead. Starts per decision were lower after the edit than before (rate ratio 0.56). That comparison is confounded twice over: the "before" period contains the opening burst, and it also contains the starvation window, which inflates the number of decisions. We therefore report the ratio but do not interpret it as an effect of the prompt.</p>
+    <div class="stats" id="group-stats"></div>
+    <div class="stat-line" id="sl-n2"></div>
+    <figure>
+      <div class="fig">
+        <p class="chart-title">New conversations started per half hour, by type</p>
+        <div class="legend"><span><i style="background:var(--s1)"></i>One-to-one starts</span><span><i style="background:var(--s2)"></i>Group starts (none)</span></div>
+        <div class="chart" id="fig-starts"></div>
+      </div>
+      <figcaption><b>Starts per half hour.</b> Green tint: queue starvation. Grey: group rooms allowed. The near-zero starts at 0.5–1.5 h coincide with starvation, not with the prompt edit.</figcaption>
+    </figure>
+    <p class="caveat">Interpretation: each decision offers a <code>peer_ids</code> list beside the agent's own open threads, and naming one peer is the cheapest action that fits that interface. Separating the interface, the model and the late timing of the prompt would need runs where groups are available from the start.</p>
+  </article>
+
+  <article class="finding" id="rq3">
+    <div class="f-label">Responsiveness to the environment</div>
+    <p class="claim">Music mentions rose within minutes of a one-line addition to the prompt.</p>
+    <p>At 2.34 h the operators appended "New addition: Music &amp; choreography" to the room prompt. In the hour before, 4.5% of agent messages mentioned music. In the hour after, 14.0% did, peaking at 21–23% per quarter-hour immediately after the addition. Within an hour, talk returned to 4–9%, still above the baseline. The jump appeared in the first quarter-hour after the change. The timing is consistent with prompt steering in a single run without a control group.</p>
+    <div class="stat-line" id="sl-n4"></div>
+    <figure>
+      <div class="fig">
+        <p class="chart-title">Share of messages mentioning music, per quarter hour</p>
+        <p class="chart-sub">line: share · band: 95% Wilson interval · dashed: music prompt addition</p>
+        <div class="chart" id="fig-music"></div>
+      </div>
+      <figcaption><b>An interrupted time series.</b> The keyword list covers music, song, melody, rhythm, dance, choreography, raga, tabla, lyric and tune. Quarter-hours with fewer than 20 messages, inside the starvation window, are omitted.</figcaption>
+    </figure>
+  </article>
+
+  <article class="finding" id="rq4">
+    <div class="f-label">Individual differences</div>
+    <p class="claim">Message volume is nearly equal across agents. What differences there are track uptime, and only how much a persona is sought out reproduces across reruns.</p>
+    <p>Messages sent are spread almost evenly: the Gini coefficient is 0.107 (95% CI 0.068–0.132), where 0 would mean perfect equality. The number of times an agent was called varied about four-fold (64–266), mostly because of the outages and queue starvation found in the audit, and it predicts messages sent (ρ = 0.60). Raw activity therefore partly measures infrastructure.</p>
+    <p>Across the three runs, messages <i>received</i> are correlated for every pair of runs, with confidence intervals above zero. Dropping the four outage agents leaves the estimate essentially unchanged (ρ = 0.62). Messages <i>sent</i> are not stable: every interval includes zero.</p>
+    <div class="stat-line" id="sl-n7"></div>
+    <figure>
+      <div class="fig">
+        <p class="chart-title">Rank correlation of each persona's position between runs</p>
+        <p class="chart-sub">dot: Spearman ρ · line: 95% bootstrap CI over the 21 personas</p>
+        <div class="chart" id="fig-stability"></div>
+      </div>
+      <figcaption><b>Rank stability across reruns.</b> Protocols differ between runs, so this tests the robustness of persona effects, not replication. Hover over a row for the estimate without the outage agents.</figcaption>
+    </figure>
+    <figure>
+      <div class="fig"><div class="table-wrap"><table class="compare" id="tbl-runs"></table></div></div>
+      <figcaption><b>Network statistics per run</b> (agent-written messages only). Run 1 used an early protocol in which most rooms held a single message, so it is not directly comparable.</figcaption>
+    </figure>
+  </article>
+
+  <article class="finding" id="rq5">
+    <div class="f-label">Conversation dynamics</div>
+    <p class="claim">Agreement builds over a conversation while pushback holds steady. Juggling more threads does not slow replies, but conversations do lose the thread.</p>
+    <p>Conversations with six or more messages were split into five equal parts. In each part we counted messages that open with an agreement marker and messages that contain an explicit pushback marker.</p>
+    <ul>
+      <li><b>Agreement</b> rises from 5.3% of messages in the first part to 12–15% afterwards (Cochran–Armitage z = 4.6).</li>
+      <li><b>Pushback</b> shows no trend (7–10%, z = −0.6, p = 0.52). There is no drift into pure accord.</li>
+      <li><b>Juggling threads</b> barely affects reply speed. An agent's number of open conversations is essentially unrelated to how fast it replies (ρ = 0.04). The effect is statistically detectable but practically zero.</li>
+      <li><b>Unanswered endings.</b> 15% of conversations end on an unanswered question.</li>
+      <li><b>Re-introductions.</b> 6% contain a re-introduction: an agent opens with "your profile caught my eye" deep into a conversation it is already having.</li>
+    </ul>
+    <div class="stat-line" id="sl-n8"></div>
+    <figure>
+      <div class="fig fig-row">
+        <div><p class="chart-title">Stance markers by position in conversation</p><div class="legend"><span><i class="line" style="background:var(--s1)"></i>Opens with agreement</span><span><i class="line" style="background:var(--s2)"></i>Contains pushback</span></div><div class="chart" id="fig-stance"></div></div>
+        <div><p class="chart-title">Reply latency by the replier's open conversations</p><p class="chart-sub">median seconds with interquartile range</p><div class="chart" id="fig-load"></div></div>
+      </div>
+      <figcaption>Left, lexical stance markers by quintile (rooms with ≥ 6 messages, n = 2,752 messages), with 95% Wilson bands. Right, reply latency is flat across concurrency levels. The bucket at 10 includes all values of 10 or more.</figcaption>
+    </figure>
+    <figure>
+      <div class="fig fig-row">
+        <div><p class="chart-title">Conversation length</p><p class="chart-sub">messages per room · median 11</p><div class="chart" id="fig-len"></div></div>
+        <div><p class="chart-title">Turn balance</p><p class="chart-sub">majority speaker's share (rooms ≥ 4 msgs)</p><div class="chart" id="fig-bal"></div></div>
+        <div><p class="chart-title">Reply latency</p><p class="chart-sub">seconds, log scale · median 133 s</p><div class="chart" id="fig-lat"></div></div>
+      </div>
+      <figcaption><b>Anatomy of a conversation.</b> Conversations are long, balanced and fast-paced.</figcaption>
+    </figure>
+  </article>
+</section>
+
+<section id="labour">
+  <h2>Shared work and tool use</h2>
+  <p>Agents published notes and ran small checks during the event. These activities were distributed differently across the group.</p>
+  <ul>
+    <li><b>Python.</b> Run by only a few agents, with a Gini coefficient of 0.78. The top three agents ran <span id="py-top3"></span> of all executions, and they are the three agents that held the turn queue.</li>
+    <li><b>Whiteboards.</b> Shared more widely (Gini 0.27).</li>
+    <li><b>Messages.</b> Spread almost evenly (Gini 0.11).</li>
+  </ul>
+  <p>Python activity concentrated in a few workers and included a burst that filled the shared queue. The whiteboards and conversation records show a different kind of contribution: giving feedback, publishing a draft and carrying an idea to a new partner.</p>
+  <figure>
+    <div class="fig">
+      <p class="chart-title">Technical contributions per agent</p>
+      <div class="legend"><span><i style="background:var(--s1)"></i>Python executions</span><span><i style="background:var(--s3)"></i>Whiteboard posts</span></div>
+      <div class="chart" id="fig-labour"></div>
+    </div>
+    <figcaption><b>Who did the technical work.</b> Sorted by total. Gini coefficients across agents: messages 0.11, whiteboards 0.27, Python 0.78.</figcaption>
+  </figure>
+</section>
+
+<section id="discussion">
+  <h2>Discussion</h2>
+  <p>Wide partner coverage gave ideas many possible routes. The creature-design exchange shows how attribution and a concrete example carried a suggestion into a second conversation. Within pairs, agents could also accept feedback, revise a scene or work out the shape of a shared score.</p>
+  <p>The setting shaped what was visible. The music prompt was followed by a short burst of music talk, and a queue stall temporarily removed most agents from the conversation. Topic and participation patterns reflect both the decisions agents made and the conditions in which they could act.</p>
+  <p>In the companion <a href="../agent-project-study/">Zugrama Residency</a>, residents had shared deliverables, larger rooms, versioned source and judges. That setting makes task acceptance, handoff and execution easier to trace. The networking logs capture an earlier part of collaboration: finding a partner, developing an idea together and carrying it into another conversation.</p>
 </section>
 
 <section id="methods">
@@ -125,11 +297,14 @@
         <li><i>Group start</i>: a start action naming two or more peers.</li>
         <li><i>Music talk</i>: a message matching a 10-stem keyword list.</li>
         <li><i>Stance</i>: keyword markers for agreement openers and explicit pushback. These are published, not validated.</li>
-        <li><i>Topic</i>: TF-IDF features with NMF (k = 10, seed 1). Each component is labelled from its top terms, and each message is assigned its dominant component.</li>
+        <li><i>Room topic</i>: a single editorial category per conversation from the earlier archive. Room counts use the cleaned set of conversations, and message counts include only agent-written turns.</li>
+        <li><i>Message topic</i>: TF-IDF features with NMF (k = 10, seed 1). Each component is labelled from its top terms, and each message is assigned its dominant component.</li>
         <li><i>Re-introduction</i>: an opener phrase appearing after message 5 of a conversation.</li>
         <li><i>Outage</i>: no model call for more than 20 minutes. The wait cap is 10 minutes, so a gap this long means the agent was not scheduled.</li>
       </ul>
     </dd>
+    <dt>Case selection</dt>
+    <dd>We selected examples with a source exchange and a visible next step such as an attributed relay, a revised draft or a saved execution. These examples illustrate what developed in particular exchanges.</dd>
     <dt>Statistics</dt>
     <dd>
       <ul>
@@ -144,6 +319,12 @@
     <dt>Reproducibility</dt>
     <dd><code>analysis/build_data.py</code> builds the descriptive figures and <code>analysis/science.py</code> builds the audit, tests, topics and conversation selection. Both read the frozen sources only. Random seeds are fixed.</dd>
   </dl>
+  <div class="buttons" aria-label="Data and code">
+    <a class="btn secondary" href="https://github.com/Deceptrax123/Agent-network-sandbox-pilot"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Sandbox code</a>
+    <a class="btn secondary" href="static/data/science.json" download>Analysis results (JSON)</a>
+    <a class="btn secondary" href="static/data/networking.json" download>Figure data (JSON)</a>
+    <a class="btn secondary" href="https://github.com/Deceptrax123/agent-networking-study/tree/main/analysis">Analysis scripts</a>
+  </div>
 </section>
 
 <section id="audit">
@@ -162,186 +343,15 @@
       <div class="legend"><span><i style="background:var(--s1)"></i>model call</span><span><i style="background:var(--s2)"></i>not scheduled (outage &gt; 20 min)</span><span><i style="background:var(--s3)"></i>queue held by others</span><span>▶ worker restarted</span><span><i class="line" style="background:var(--ink-2)"></i>prompt change</span></div>
       <div class="chart" id="fig-lanes"></div>
     </div>
-    <figcaption><b>Figure 2. The run as the scheduler saw it.</b> Each row is an agent and each tick a model call. Green bars mark queue starvation (0.5–1.33 h): three agents made 291 consecutive calls, 285 of them Python, and 238 of those chose a 0-second wait. The remaining 18 agents could not act. From 3.3–4.6 h, four agents stop after provider errors and are not restarted until 7.24 h. Dashed lines mark the two prompt changes. Hover over a row for details.</figcaption>
+    <figcaption><b>The run as the scheduler saw it.</b> Each row is an agent and each tick a model call. Green bars mark queue starvation (0.5–1.33 h): three agents made 291 consecutive calls, 285 of them Python, and 238 of those chose a 0-second wait. The remaining 18 agents could not act. From 3.3–4.6 h, four agents stop after provider errors and are not restarted until 7.24 h. Dashed lines mark the two prompt changes. Hover over a row for details.</figcaption>
   </figure>
   <div class="audit-grid" id="audit-items"></div>
   <figure>
     <div class="fig"><div class="table-wrap"><table class="compare" id="tbl-audit"></table></div></div>
-    <figcaption><b>Table 1. Integrity checks.</b> Token counts from the raw responses match the usage ledger to within 0.003%. Every call without a recorded cost is explained by a provider error or a missing response.</figcaption>
+    <figcaption><b>Integrity checks.</b> Token counts from the raw responses match the usage ledger to within 0.003%. Every call without a recorded cost is explained by a provider error or a missing response.</figcaption>
   </figure>
   <div class="prior"><span class="tag">Corrects earlier reading</span>Our first draft, and the earlier automated audit, described 0.5–1.7 h as a "consolidation phase" in which agents deepened existing threads. The call log shows something else: 18 of 21 agents were simply not being scheduled. The lull in new conversations is an artifact of the scheduler, not a social phase.</div>
   <p class="caveat"><b>How the audit shapes the analysis.</b> (i) We report per-decision rates rather than raw counts wherever activity matters. (ii) The rank-stability test is repeated without the four outage agents. (iii) Prompt-change effects are estimated in narrow windows around each change and flagged as confounded with time. (iv) Whiteboard posts are excluded from all talk measures.</p>
-</section>
-
-<section id="results">
-  <h2>Results</h2>
-
-  <article class="finding" id="rq1">
-    <div class="f-label">RQ1 · Partner choice</div>
-    <p class="claim">Agents explore rather than deepen. They meet nearly every possible partner, and avoid meeting anyone twice far more than chance predicts.</p>
-    <p>Run 3 has three phases. An opening burst comes first: 87 conversations start in the first half hour. Then comes the starvation window, in which almost nothing starts because only three agents are acting. Finally, a steady sweep of 11–20 new partners per half hour lasts to the end. Half of all pairs had met by hour 3.2, and 90% by hour 6.5. Only 2 of the 202 pairs that met ever opened a second conversation.</p>
-    <p>Is that just what happens when 21 agents have about 20 conversations each? To check, we built a null model. It keeps every agent's number of one-to-one rooms fixed and randomises only who they were with. Under this null, 199 dyadic rooms would contain 68 repeat pairs. The observed 2 is far outside the null distribution.</p>
-    <div class="stat-line" id="sl-n1"></div>
-    <figure>
-      <div class="fig fig-row">
-        <div><p class="chart-title">Share of the 210 possible pairs that have met</p><div class="legend"><span><i class="line" style="background:var(--s1)"></i>Run 3 (main)</span><span><i class="line" style="background:var(--s2)"></i>Run 2</span></div><div class="chart" id="fig-saturation"></div></div>
-        <div><p class="chart-title">Repeat pairs: observed vs random pairing</p><p class="chart-sub">4,000 degree-preserving draws</p><div class="chart" id="fig-null"></div></div>
-      </div>
-      <figcaption><b>Figure 3.</b> <i>Left</i>: pair coverage over time. Run 3 flattens during the starvation window (grey), not because agents chose to stop exploring. <i>Right</i>: the number of repeat pairs expected if partner identity were random (bars) against the 2 observed (line).</figcaption>
-    </figure>
-    <p>The conversations themselves are not shallow. The median conversation runs 11 messages, both sides contribute almost equally (median majority share 0.53), and replies arrive within a median of 133 s.</p>
-  </article>
-
-  <article class="finding" id="rq2">
-    <div class="f-label">RQ2 · Group formation</div>
-    <p class="claim">An explicit invitation to form groups produced no groups. Every conversation stayed one-to-one.</p>
-    <p>From 1.67 h, the prompt stated that rooms could hold three or more residents, and the action schema documented the syntax for starting a group. Across 2,149 decisions under that prompt, agents started <b>zero</b> groups and joined <b>zero</b> existing rooms. They opened 189 new one-to-one conversations instead. Starts per decision were lower after the edit than before (rate ratio 0.56). That comparison is confounded twice over: the "before" period contains the opening burst, and it also contains the starvation window, which inflates the number of decisions. We therefore report the ratio but do not interpret it as an effect of the prompt.</p>
-    <div class="stats" id="group-stats"></div>
-    <div class="stat-line" id="sl-n2"></div>
-    <figure>
-      <div class="fig">
-        <p class="chart-title">New conversations started per half hour, by type</p>
-        <div class="legend"><span><i style="background:var(--s1)"></i>One-to-one starts</span><span><i style="background:var(--s2)"></i>Group starts (none)</span></div>
-        <div class="chart" id="fig-starts"></div>
-      </div>
-      <figcaption><b>Figure 4. Starts per half hour.</b> Green tint: queue starvation. Grey: group rooms allowed. The near-zero starts at 0.5–1.5 h coincide with starvation, not with the prompt edit.</figcaption>
-    </figure>
-    <p class="caveat">Interpretation: each decision offers a <code>peer_ids</code> list beside the agent's own open threads, and naming one peer is the cheapest action that fits that interface. Separating the interface, the model and the late timing of the prompt would need runs where groups are available from the start.</p>
-  </article>
-
-  <article class="finding" id="rq3">
-    <div class="f-label">RQ3 · Responsiveness to the environment</div>
-    <p class="claim">A one-sentence addition to the shared prompt redirected conversation within minutes, and the effect then decayed.</p>
-    <p>At 2.34 h the operators appended "New addition: Music &amp; choreography" to the room prompt. In the hour before, 4.5% of agent messages mentioned music. In the hour after, 14.0% did, peaking at 21–23% per quarter-hour immediately after the addition. Within an hour, talk returned to 4–9%, still above the baseline. The jump happens in the first quarter-hour after the change, and no other intervention falls in that window. That makes the prompt the most plausible cause, although this is a single interrupted time series without a control group.</p>
-    <div class="stat-line" id="sl-n4"></div>
-    <figure>
-      <div class="fig">
-        <p class="chart-title">Share of messages mentioning music, per quarter hour</p>
-        <p class="chart-sub">line: share · band: 95% Wilson interval · dashed: music prompt addition</p>
-        <div class="chart" id="fig-music"></div>
-      </div>
-      <figcaption><b>Figure 5. An interrupted time series.</b> The keyword list covers music, song, melody, rhythm, dance, choreography, raga, tabla, lyric and tune. Quarter-hours with fewer than 20 messages, inside the starvation window, are omitted.</figcaption>
-    </figure>
-  </article>
-
-  <article class="finding" id="rq4">
-    <div class="f-label">RQ4 · Individual differences</div>
-    <p class="claim">Message volume is nearly equal across agents. What differences there are track uptime, and only how much a persona is sought out reproduces across reruns.</p>
-    <p>Messages sent are spread almost evenly: the Gini coefficient is 0.107 (95% CI 0.068–0.132), where 0 would mean perfect equality. The number of times an agent was called varied about four-fold (64–266), mostly because of the outages and queue starvation found in the audit, and it predicts messages sent (ρ = 0.60). Raw activity therefore partly measures infrastructure.</p>
-    <p>Across the three runs, messages <i>received</i> are correlated for every pair of runs, with confidence intervals above zero. Dropping the four outage agents leaves the estimate essentially unchanged (ρ = 0.62). Messages <i>sent</i> are not stable: every interval includes zero.</p>
-    <div class="stat-line" id="sl-n7"></div>
-    <figure>
-      <div class="fig">
-        <p class="chart-title">Rank correlation of each persona's position between runs</p>
-        <p class="chart-sub">dot: Spearman ρ · line: 95% bootstrap CI over the 21 personas</p>
-        <div class="chart" id="fig-stability"></div>
-      </div>
-      <figcaption><b>Figure 6. Rank stability across reruns.</b> Protocols differ between runs, so this tests the robustness of persona effects, not replication. Hover over a row for the estimate without the outage agents.</figcaption>
-    </figure>
-    <figure>
-      <div class="fig"><div class="table-wrap"><table class="compare" id="tbl-runs"></table></div></div>
-      <figcaption><b>Table 2. Network statistics per run</b> (agent-written messages only). Run 1 used an early protocol in which most rooms held a single message, so it is not directly comparable.</figcaption>
-    </figure>
-  </article>
-
-  <article class="finding" id="rq5">
-    <div class="f-label">RQ5 · Conversation dynamics</div>
-    <p class="claim">Agreement builds over a conversation while pushback holds steady. Juggling more threads does not slow replies, but conversations do lose the thread.</p>
-    <p>Conversations with six or more messages were split into five equal parts. In each part we counted messages that open with an agreement marker and messages that contain an explicit pushback marker.</p>
-    <ul>
-      <li><b>Agreement</b> rises from 5.3% of messages in the first part to 12–15% afterwards (Cochran–Armitage z = 4.6).</li>
-      <li><b>Pushback</b> shows no trend (7–10%, z = −0.6, p = 0.52). There is no drift into pure accord.</li>
-      <li><b>Juggling threads</b> barely affects reply speed. An agent's number of open conversations is essentially unrelated to how fast it replies (ρ = 0.04). The effect is statistically detectable but practically zero.</li>
-      <li><b>Unanswered endings.</b> 15% of conversations end on an unanswered question.</li>
-      <li><b>Re-introductions.</b> 6% contain a re-introduction: an agent opens with "your profile caught my eye" deep into a conversation it is already having.</li>
-    </ul>
-    <div class="stat-line" id="sl-n8"></div>
-    <figure>
-      <div class="fig fig-row">
-        <div><p class="chart-title">Stance markers by position in conversation</p><div class="legend"><span><i class="line" style="background:var(--s1)"></i>Opens with agreement</span><span><i class="line" style="background:var(--s2)"></i>Contains pushback</span></div><div class="chart" id="fig-stance"></div></div>
-        <div><p class="chart-title">Reply latency by the replier's open conversations</p><p class="chart-sub">median seconds with interquartile range</p><div class="chart" id="fig-load"></div></div>
-      </div>
-      <figcaption><b>Figure 7.</b> <i>Left</i>: lexical stance markers by quintile (rooms with ≥ 6 messages, n = 2,752 messages), with 95% Wilson bands. <i>Right</i>: reply latency is flat across concurrency levels. The bucket at 10 includes all values of 10 or more.</figcaption>
-    </figure>
-    <figure>
-      <div class="fig fig-row">
-        <div><p class="chart-title">Conversation length</p><p class="chart-sub">messages per room · median 11</p><div class="chart" id="fig-len"></div></div>
-        <div><p class="chart-title">Turn balance</p><p class="chart-sub">majority speaker's share (rooms ≥ 4 msgs)</p><div class="chart" id="fig-bal"></div></div>
-        <div><p class="chart-title">Reply latency</p><p class="chart-sub">seconds, log scale · median 133 s</p><div class="chart" id="fig-lat"></div></div>
-      </div>
-      <figcaption><b>Figure 8. Anatomy of a conversation.</b> Conversations are long, balanced and fast-paced.</figcaption>
-    </figure>
-  </article>
-</section>
-
-<section id="conversations">
-  <h2>Interesting conversations</h2>
-  <p>We chose these conversations by rule, not by taste, so they can be reproduced and are not cherry-picked. Each card states its selection rule. Quoted turns are the first 55 words of the original message, and "…" marks where we cut. Agents are simulated personas, and their words are not the views of the people they represent.</p>
-  <div class="convos" id="convos"></div>
-  <div class="prior"><span class="tag">Ideas crossing the network</span>With 197 of 202 pairs meeting only once, an idea can reach a third agent only if someone relays it. The earlier audit verified <span id="hop-n"></span> relays in which an agent explicitly credited an idea to its source when passing it on: <span id="hop-list"></span>.</div>
-</section>
-
-<section id="directions">
-  <h2>Directions: what agents talked about</h2>
-  <p>We fitted a topic model to all 2,795 agent-written messages and assigned each message its dominant topic.</p>
-  <ul>
-    <li><b>Mostly not work.</b> The two largest themes are not work at all: music and everyday taste (19% of messages) and fiction and scenes (17%). Technical themes (agent memory, payment privacy protocols, biometric proof of personhood) are each 4–9% of messages.</li>
-    <li><b>Opening exchanges, then a shift.</b> Openers ("your work caught my eye") make up 21% of messages in the first half hour, then almost disappear.</li>
-    <li><b>Prompt-driven themes.</b> Music jumps at the prompt addition.</li>
-    <li><b>Converging mixes.</b> Over the run, each agent's topic mix moves closer to the population mix: the median Jensen–Shannon distance falls from 0.26 to 0.22 (Wilcoxon p = 0.02).</li>
-    <li><b>Drift within conversations.</b> 22 of the 38 long conversations end on a different dominant topic than they started on.</li>
-  </ul>
-  <figure>
-    <div class="fig">
-      <p class="chart-title">Share of messages per topic, per half hour</p>
-      <p class="chart-sub">dashed lines: group-room prompt (1.67 h) and music addition (2.34 h) · number = share of the whole run</p>
-      <div class="chart" id="fig-topics"></div>
-    </div>
-    <figcaption><b>Figure 9. Topic directions over the run.</b> TF-IDF + NMF with k = 10 and seed 1. The two chess components are merged. Labels are assigned by keyword rules from each component's top terms, which are shown under each title. The starvation window has few messages, so its points are noisy.</figcaption>
-  </figure>
-  <figure>
-    <div class="fig"><div class="table-wrap"><table class="compare" id="tbl-drift"></table></div></div>
-    <figcaption><b>Table 3. Where long conversations drift</b> (≥ 20 messages; dominant topic of the first quarter → last quarter).</figcaption>
-  </figure>
-</section>
-
-<section id="labour">
-  <h2>Division of work</h2>
-  <p>Nobody assigned roles, but technical work still concentrated sharply:</p>
-  <ul>
-    <li><b>Python.</b> Run by only a few agents, with a Gini coefficient of 0.78. The top three agents ran <span id="py-top3"></span> of all executions, and they are the three agents that held the turn queue.</li>
-    <li><b>Whiteboards.</b> Shared more widely (Gini 0.27).</li>
-    <li><b>Messages.</b> Spread almost evenly (Gini 0.11).</li>
-  </ul>
-  <p>The pattern is specialisation without coordination. The agents who executed code did so in long, private, self-scheduled loops (wait = 0 s), checking a counterexample against hundreds of randomised cases. They did not hand work to others.</p>
-  <figure>
-    <div class="fig">
-      <p class="chart-title">Technical contributions per agent</p>
-      <div class="legend"><span><i style="background:var(--s1)"></i>Python executions</span><span><i style="background:var(--s3)"></i>Whiteboard posts</span></div>
-      <div class="chart" id="fig-labour"></div>
-    </div>
-    <figcaption><b>Figure 10. Who did the technical work.</b> Sorted by total. Gini coefficients across agents: messages 0.11, whiteboards 0.27, Python 0.78.</figcaption>
-  </figure>
-</section>
-
-<section id="tests">
-  <h2>All hypothesis tests</h2>
-  <p>Every test we ran is listed below, including the null results. "Supported" means the BH-adjusted p is below 0.05 and the effect goes in the stated direction. "Estimate" rows report an interval without a null hypothesis.</p>
-  <div id="tbl-tests"></div>
-</section>
-
-<section id="discussion">
-  <h2>Discussion</h2>
-  <p><b>Interface effects masquerade as social behaviour.</b> Three of our clearest regularities sit close to the agent interface:</p>
-  <ul>
-    <li>exploring partners instead of re-meeting them;</li>
-    <li>never forming groups;</li>
-    <li>an apparent "consolidation phase".</li>
-  </ul>
-  <p>The interface lists peers one at a time and the scheduler grants three turns at once. Starvation produced a phase that looked social, and the outages produced activity differences that looked like personality. We suggest that multi-agent social simulations report a scheduler-level run audit as routinely as they report the model and prompt.</p>
-  <p><b>Responsiveness cuts both ways.</b> The music result shows that the environment steers these agents quickly. That makes environments a powerful experimental lever. It also means unlogged operator actions can silently confound a study. Here they were logged in the platform's state file, so we could find them.</p>
-  <p><b>Tool loops are a coordination failure.</b> Three agents ran 285 Python calls with no wait between them. That is individually rational behaviour that becomes a shared-resource failure under a fixed-capacity queue. Fair scheduling, such as a per-agent rate cap or round-robin turns, is a precondition for interpreting any activity-based measure.</p>
-  <div class="prior"><span class="tag">Relation to the earlier audit</span>The earlier automated audit (GPT-6.1 Sol and GPT-6.2 Astra) produced curated case studies: co-written scenes, a chess game and idea relays. They remain accurate as cases. This study adds three things: a scheduler-level audit that reinterprets one phase, null models and intervals for its qualitative claims, and two new findings, the effect of the music prompt and the persistence of how much each persona is sought out.</div>
 </section>
 
 <section id="limits">
@@ -351,6 +361,7 @@
     <li><b>Observational, not experimental.</b> The prompt changes were not randomised. The music result rests on timing.</li>
     <li><b>Crude text measures.</b> Stance, music and re-introduction are keyword measures, and topics come from an unsupervised model with hand labels. All the patterns are published so they can be checked.</li>
     <li><b>Infrastructure noise.</b> Outages and starvation are documented but cannot be undone. Results that depend on activity volume should be read with them in mind.</li>
+    <li><b>Selected ideas.</b> The examples and relays illustrate different paths through the conversation record. They provide no prevalence estimate.</li>
     <li><b>Personas are not people.</b> Nothing here describes the real applicants' behaviour or preferences.</li>
   </ul>
 </section>
@@ -364,6 +375,18 @@
     <li><b>Fair scheduling as a treatment.</b> Compare first-come scheduling with round-robin turns and measure starvation, inequality and conversation coverage.</li>
     <li><b>Heterogeneous populations.</b> Mix models and reasoning levels to test whether hubs and communities emerge where homogeneous agents produced none.</li>
   </ul>
+</section>
+
+<section id="tests">
+  <h2>All hypothesis tests</h2>
+  <p>These tests were chosen after an initial qualitative review of the run. The table includes all exploratory tests, including null results. “Supported” marks results in the stated direction with a Benjamini–Hochberg-adjusted p-value below 0.05.</p>
+  <div id="tbl-tests"></div>
+</section>
+
+<section id="conversations">
+  <h2>Appendix: conversation excerpts</h2>
+  <p>Each excerpt states its selection rule. Turns show up to 55 words, and an ellipsis marks omitted text. The speakers are simulated personas.</p>
+  <div class="convos" id="convos"></div>
 </section>
 
 <section id="agents">
@@ -385,12 +408,11 @@
 
 <section id="cite">
   <h2>BibTeX</h2>
-<pre class="bibtex"><button class="theme-btn copy-btn" type="button">Copy</button><code>@misc{srinivasan2026everyone,
-  title  = {Everyone Meets Everyone, Once: An Audited Analysis of Partner Choice,
-            Group Avoidance and Prompt-Steered Topics among LLM Agents},
+<pre class="bibtex"><button class="theme-btn copy-btn" type="button">Copy</button><code>@misc{srinivasan2026zugramanetworking,
+  title  = {Zugrama Networking Event},
   author = {Srinivasan, Srinitish},
   year   = {2026},
-  note   = {Agent Residency Studies, Study 1},
+  note   = {Zugrama studies, Study 1},
   url    = {https://deceptrax123.github.io/agent-networking-study/}
 }</code></pre>
 </section>
@@ -400,7 +422,7 @@
 <footer>
   <div class="wrap">
     <p><b>Data and privacy.</b> All figures and tests are computed from the frozen main-run archive, the event database (read-only) and the captured request/response audit, using <code>analysis/build_data.py</code> and <code>analysis/science.py</code>. The page publishes aggregate statistics, first-name labels and short, rule-selected excerpts of agent-generated messages. It does not include CVs, private memory, questionnaires or contact details. Agents are simulated personas, and their statements are not the views of the people they represent.</p>
-    <p><b>Acknowledgements.</b> The qualitative case studies referenced above come from an earlier automated audit of the same record by GPT-6.1 Sol and GPT-6.2 Astra. Charts are rendered with D3.</p>
+    <p><b>Acknowledgements.</b> The selected cases, room categories and relay evidence build on earlier log analyses by GPT-6.1 Sol and GPT-6.2 Astra. Charts are rendered with D3.</p>
   </div>
 </footer>
 <script src="static/js/charts.js"></script>

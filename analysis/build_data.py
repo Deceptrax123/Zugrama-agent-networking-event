@@ -173,6 +173,19 @@ def main():
     for m in M:
         byroom[m["conversation_id"]].append(m)
 
+    # The archive's editorial categories describe whole rooms. Weight them by
+    # cleaned message counts as a second view of how much discussion they held.
+    room_categories = {room["id"]: room["category"] for room in R["rooms"]}
+    categories = collections.defaultdict(collections.Counter)
+    for room_id, messages in byroom.items():
+        counts = categories[room_categories[room_id]]
+        counts["rooms"] += 1
+        counts["messages"] += len(messages)
+    out["room_categories"] = [
+        {"category": name, "rooms": counts["rooms"], "messages": counts["messages"]}
+        for name, counts in sorted(categories.items(), key=lambda pair: (-pair[1]["rooms"], pair[0]))
+    ]
+
     def saturation(run):
         seen, curve, s0 = set(), [], run["started_at"]
         for m in sorted(run["messages"], key=lambda m: m["created_at"]):

@@ -17,6 +17,28 @@
     $(el).innerHTML = items.map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
   }
   const r3 = D.runs["3"];
+  const topicUnit = $("topic-unit");
+  const roomOption = topicUnit.querySelector('input[value="rooms"]');
+  function renderRoomTopics() {
+    const byRoom = roomOption.checked;
+    const key = byRoom ? "rooms" : "messages";
+    const unit = byRoom ? "conversations" : "messages";
+    const chart = $("fig-room-topics");
+    C.hbars(chart, {
+      data: D.room_categories, label: "category", keys: [key], colors: [byRoom ? "--s1" : "--s3"],
+      labelW: 153, rowH: 27, valueLabels: true, valueW: 36, xMax: byRoom ? 60 : 650, xLabel: unit,
+      tipFmt: (row) => `<b>${esc(row.category)}</b><br>${row.rooms} conversations · ${fmt(row.messages)} agent-written messages`,
+    });
+    const music = D.room_categories.find((row) => row.category === "Music & movement");
+    $("topic-reading").textContent = byRoom
+      ? `Community and research was the largest category, with ${D.room_categories[0].rooms} of ${r3.rooms} conversations.`
+      : `Music and movement held ${fmt(music.messages)} messages across ${music.rooms} conversations.`;
+    const values = D.room_categories.map((row) => `${row.category}: ${fmt(row[key])}`).join(". ");
+    chart.querySelector("svg").setAttribute("aria-label", `Primary topic by ${unit}. ${values}.`);
+  }
+  topicUnit.addEventListener("change", renderRoomTopics);
+  C.register(renderRoomTopics);
+
   tiles("run-stats", [
     [fmt(AU.calls), "model calls audited"],
     [fmt(r3.messages), "agent-written messages"],
@@ -80,9 +102,6 @@
     return `<article class="convo"><header><h4>${i + 1}. ${esc(c.people.join(" & "))}</h4><span class="meta">${c.messages} messages · ${c.minutes} min · topic: ${esc(c.topic)}</span></header>
       <p class="why">${esc(c.why)}</p>${turns}<p class="crit">Selection rule: ${esc(c.criterion)}</p></article>`;
   }).join("");
-  $("hop-n").textContent = X.hops.length;
-  $("hop-list").innerHTML = X.hops.map((h) => `<i>${esc(h.label)}</i>`).join("; ");
-
   // ---------- drift table ----------
   $("tbl-drift").innerHTML = `<thead><tr><th>From (first quarter)</th><th>To (last quarter)</th><th>Conversations</th></tr></thead><tbody>${
     X.drift.flows.map((f) => `<tr><td>${esc(f.from)}</td><td>${esc(f.to)}</td><td>${f.n}</td></tr>`).join("")}

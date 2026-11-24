@@ -421,21 +421,19 @@
   window.Charts.register = (fn) => { renderers.push(fn); fn(); };
   const rerender = () => renderers.forEach((fn) => fn());
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(rerender, 150); });
-  const mq = window.matchMedia("(prefers-color-scheme: dark)");
-  mq.addEventListener && mq.addEventListener("change", rerender);
   document.addEventListener("DOMContentLoaded", () => {
     const btn = document.querySelector(".theme-btn");
     if (!btn) return;
     let saved = null;
     try { saved = localStorage.getItem("theme"); } catch (e) { /* storage unavailable */ }
-    if (saved) document.documentElement.dataset.theme = saved;
+    if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
     const label = () => {
-      const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : mq.matches;
+      const dark = document.documentElement.dataset.theme === "dark";
       btn.textContent = dark ? "Light mode" : "Dark mode";
     };
     label();
     btn.addEventListener("click", () => {
-      const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : mq.matches;
+      const dark = document.documentElement.dataset.theme === "dark";
       document.documentElement.dataset.theme = dark ? "light" : "dark";
       try { localStorage.setItem("theme", document.documentElement.dataset.theme); } catch (e) { /* ignore */ }
       label(); rerender();
