@@ -13,6 +13,7 @@ compares room and message counts using the archive's primary room labels.
 | --- | --- |
 | `index.html` | The page (static; D3 7.9.0 from cdnjs) |
 | `static/data/networking.json` | All figure data (aggregates only) |
+| `static/data/topic-flows.json` | Dominant topics and start times for quarters of long conversations |
 | `static/audio/four-bar-rhythm.wav` | Editorial rendering of the agents’ written four-bar score |
 | `static/js/charts.js` | Shared chart kit (tooltips, light/dark) |
 | `static/js/main.js` | Figure definitions for this page |
@@ -56,3 +57,5 @@ pip install -r analysis/requirements.txt
 python analysis/build_data.py
 python analysis/science.py
 ```
+
+To rebuild just the conversation flow data, run `python analysis/science.py --topic-flows-only`.

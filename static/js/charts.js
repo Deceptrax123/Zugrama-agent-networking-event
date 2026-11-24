@@ -414,7 +414,101 @@
     }
   }
 
-  window.Charts = { line, bars, hbars, histogram, scatter, matrix, dots, ranges, network, table, forest, swimlanes, multiples, heat, css, fmt };
+  function clock(hours) {
+    const seconds = Math.max(0, Math.round(hours * 3600));
+    const minutes = String(Math.floor(seconds / 60) % 60).padStart(2, "0");
+    return `${Math.floor(seconds / 3600)}:${minutes}:${String(seconds % 60).padStart(2, "0")}`;
+  }
+
+  /* Selected events in order, with position measured on the run clock. */
+  function trace(el, { steps, label, format, axisLabel }) {
+    const f = frame(el, { height: steps.length * 34 + 70, margin: { top: 16, left: 108, right: 25, bottom: 42 } });
+    const low = d3.min(steps, (step) => step.h);
+    const high = d3.max(steps, (step) => step.h);
+    const padding = Math.max((high - low) * 0.06, 1 / 120);
+    const x = d3.scaleLinear().domain([Math.max(0, low - padding), high + padding]).range([0, f.w]);
+    const y = d3.scalePoint().domain(d3.range(steps.length)).range([0, f.h]).padding(0.6);
+    const ticks = x.ticks(Math.max(2, Math.floor(f.w / 54)));
+    f.g.append("g").attr("class", "grid").attr("transform", `translate(0,${f.h})`)
+      .call(d3.axisBottom(x).tickValues(ticks).tickSize(-f.h).tickFormat(""));
+    f.g.append("g").attr("class", "axis").attr("transform", `translate(0,${f.h})`)
+      .call(d3.axisBottom(x).tickValues(ticks).tickFormat(format).tickSizeOuter(0));
+    f.g.append("text").attr("x", f.w).attr("y", f.h + 34).attr("text-anchor", "end").text(axisLabel);
+    f.g.append("path").attr("fill", "none").attr("stroke", css("--s1")).attr("stroke-opacity", 0.65)
+      .attr("stroke-width", 2)
+      .attr("d", d3.line().x((step) => x(step.h)).y((step, i) => y(i))(steps));
+    steps.forEach((step, i) => {
+      const at = y(i);
+      f.g.append("text").attr("x", -10).attr("y", at).attr("dy", "0.35em").attr("text-anchor", "end")
+        .attr("class", "label-strong").text(label(step, i));
+      const marker = f.g.append("g").attr("transform", `translate(${x(step.h)},${at})`);
+      marker.append("circle").attr("r", 9).attr("fill", css("--surface")).attr("stroke", css("--s1")).attr("stroke-width", 2);
+      marker.append("text").attr("dy", "0.35em").attr("text-anchor", "middle").attr("class", "label-strong").text(i + 1);
+      marker.append("title").text(`${step.title} at ${format(step.h)}`);
+    });
+    f.svg.attr("aria-label", steps.map((step) => `${step.title} at ${format(step.h)}`).join(". "));
+  }
+
+  /* Ribbon widths encode how many conversations share a start and end topic. */
+  function topicFlow(el, { links, topics, shortLabel }) {
+    const left = topics.filter((topic) => links.some((link) => link.from === topic));
+    const right = topics.filter((topic) => links.some((link) => link.to === topic));
+    const width = d3.sum(links, (link) => link.n);
+    const unit = 4;
+    const gap = 19;
+    const maxRows = Math.max(left.length, right.length);
+    const labelMargin = (el.clientWidth || 600) < 450 ? 93 : 132;
+    const f = frame(el, { margin: { left: labelMargin, right: labelMargin, top: 12, bottom: 12 },
+                          height: Math.max(114, width * unit + maxRows * gap + 24) });
+    const palette = ["--s1", "--s2", "--s3", "--s4", "--s5"];
+    const color = (topic) => css(palette[topics.indexOf(topic) % palette.length]);
+    const edges = links.map((link) => ({ ...link }));
+
+    function position(side, end, rows, otherRows) {
+      const positions = [];
+      const usedHeight = width * unit + (rows.length - 1) * gap;
+      let next = (f.h - usedHeight) / 2;
+      for (const topic of rows) {
+        const attached = edges.filter((link) => link[side] === topic)
+          .sort((a, b) => otherRows.indexOf(a[end]) - otherRows.indexOf(b[end]));
+        const count = d3.sum(attached, (link) => link.n);
+        positions.push({ topic, y: next, count });
+        for (const edge of attached) {
+          const size = edge.n * unit;
+          edge[side + "Y"] = next + size / 2;
+          next += size;
+        }
+        next += gap;
+      }
+      return positions;
+    }
+
+    const a = position("from", "to", left, right);
+    const b = position("to", "from", right, left);
+    const path = d3.linkHorizontal().source((link) => [0, link.fromY]).target((link) => [f.w, link.toY]);
+    const ribbons = f.g.selectAll(".topic-ribbon").data(edges).join("path")
+      .attr("class", "topic-ribbon").attr("d", path).attr("fill", "none")
+      .attr("stroke", (edge) => color(edge.from)).attr("stroke-opacity", 0.54)
+      .attr("stroke-width", (edge) => edge.n * unit)
+      .on("pointerenter", function () { d3.select(this).attr("stroke-opacity", 0.95).raise(); })
+      .on("pointerleave", function () { d3.select(this).attr("stroke-opacity", 0.54); });
+    ribbons.append("title").text((edge) => `${edge.from} to ${edge.to}: ${edge.n} ${edge.n === 1 ? "conversation" : "conversations"}`);
+    function endpoints(rows, leftSide) {
+      const at = leftSide ? 0 : f.w;
+      const guides = f.g.append("g").selectAll("g").data(rows).join("g");
+      guides.append("rect").attr("width", 5).attr("height", (row) => row.count * unit)
+        .attr("x", at + (leftSide ? -5 : 0)).attr("y", (row) => row.y).attr("fill", (row) => color(row.topic));
+      guides.append("text").attr("x", at + (leftSide ? -8 : 8)).attr("y", (row) => row.y + row.count * unit / 2)
+        .attr("dy", "0.35em").attr("text-anchor", leftSide ? "end" : "start")
+        .attr("class", "label-strong").text((row) => `${shortLabel(row.topic)} (${row.count})`);
+      guides.append("title").text((row) => row.topic);
+    }
+    endpoints(a, true);
+    endpoints(b, false);
+    f.svg.attr("aria-label", `Opening and closing topics for ${width} conversations. Counts are in the table below.`);
+  }
+
+  window.Charts = { topicFlow, trace, clock, line, bars, hbars, histogram, scatter, matrix, dots, ranges, network, table, forest, swimlanes, multiples, heat, css, fmt };
 
   /* ---------- page plumbing: theme toggle, re-render on resize/theme ---------- */
   const renderers = [];

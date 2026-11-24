@@ -28,6 +28,7 @@ from build_data import ARCHIVE, AUDIT, FROZEN, MAIN_EVENT, PUSH, AGREE, SITE, LI
 STATE = LIVE / "final-results" / MAIN_EVENT / "state.json"
 HOPS = LIVE / "final-results" / MAIN_EVENT / "hops.json"
 OUT = SITE / "static/data/science.json"
+FLOW_OUT = SITE / "static/data/topic-flows.json"
 MUSIC = re.compile(r"\b(music|song|melod|rhythm|choreograph|danc|raga|tabla|lyric|tune)", re.I)
 
 # Labels for NMF components are assigned by the first rule whose keyword appears in a
@@ -54,6 +55,7 @@ def trim(text, words=55):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--labels", choices=["names", "codes"], default="names")
+    ap.add_argument("--topic-flows-only", action="store_true", help="Refresh the conversation traces without rewriting the full audit export")
     args = ap.parse_args()
     A = json.loads(ARCHIVE.read_text())
     people = A["people"]
@@ -407,22 +409,39 @@ def main():
         effect=S.r(np.median(pj[:, 1] - pj[:, 0])))
     # within-conversation drift: dominant topic of first vs last quarter, conversations >= 20 messages
     drift = []
+    topic_paths = []
+    room_indices = collections.defaultdict(list)
+    for i, message in enumerate(M):
+        room_indices[message["conversation_id"]].append(i)
     for rid in byroom:
-        sel = [k for k, m in enumerate(M) if m["conversation_id"] == rid]
+        sel = room_indices[rid]
         if len(sel) >= 20:
             q_ = len(sel) // 4
-            a_, b_ = names_[int(T[sel[:q_]].mean(0).argmax())], names_[int(T[sel[-q_:]].mean(0).argmax())]
+            bounds = [0, q_, len(sel) // 2, len(sel) - q_, len(sel)]
+            windows = []
+            for lo, hi in zip(bounds, bounds[1:]):
+                indices = sel[lo:hi]
+                topic = names_[int(T[indices].mean(0).argmax())]
+                windows.append({"topic": topic, "first": lo + 1, "last": hi,
+                                "h": S.r(H(M[indices[0]]["created_at"]), 4)})
+            a_, b_ = windows[0]["topic"], windows[-1]["topic"]
             drift.append({"room": rid[:8], "from": a_, "to": b_, "n": len(sel)})
+            topic_paths.append({"room": rid[:8], "people": sorted({label[M[i]["sender_id"]] for i in sel}),
+                                "n": len(sel), "windows": windows})
     nd = sum(d["from"] != d["to"] for d in drift)
     add("N13", "Long conversations drift away from their opening topic", "Share of conversations (≥ 20 messages) whose dominant topic differs between first and last quarter",
         f"{nd} of {len(drift)} drifted", None, len(drift), effect=S.r(nd / len(drift)), ci=[S.r(x) for x in S.wilson(nd, len(drift))])
     flows = collections.Counter((d["from"], d["to"]) for d in drift if d["from"] != d["to"])
     out["drift"] = {"n": len(drift), "drifted": nd, "flows": [{"from": a, "to": b, "n": n} for (a, b), n in flows.most_common()]}
+    FLOW_OUT.write_text(json.dumps({"labels_mode": args.labels, "paths": sorted(topic_paths, key=lambda path: (-path["n"], path["room"]))},
+                                   ensure_ascii=False, separators=(",", ":")) + "\n")
+    if args.topic_flows_only:
+        return
     out["topics"] = {"series": series, "jsd": [[S.r(a), S.r(b)] for a, b in pj], "k": 10, "method": "TF-IDF + NMF (k = 10, seed 1), hand-labelled, two chess components merged"}
     # per-room dominant topic (for conversation cards)
     room_topic = {}
     for rid, ms in byroom.items():
-        sel = [k for k, m in enumerate(M) if m["conversation_id"] == rid]
+        sel = room_indices[rid]
         room_topic[rid] = names_[int(T[sel].mean(0).argmax())]
 
     # =============================== CONVERSATIONS ===============================

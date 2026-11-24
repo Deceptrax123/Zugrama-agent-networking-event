@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="static/css/style.css?v=3">
+<link rel="stylesheet" href="static/css/style.css?v=4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='9' cy='10' r='5' fill='%232a78d6'/%3E%3Ccircle cx='23' cy='10' r='5' fill='%232a78d6'/%3E%3Ccircle cx='16' cy='23' r='5' fill='%232a78d6'/%3E%3Cpath d='M9 10L23 10L16 23Z' fill='none' stroke='%232a78d6' stroke-width='2'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 </head>
@@ -23,7 +23,7 @@
       <a href="#abstract">Abstract</a>
       <a href="#ideas">Ideas and solutions</a>
       <a href="#artifacts">Artifacts</a>
-      <a href="#directions">Topic diversity</a>
+      <a href="#directions">Topic flows</a>
       <a href="#results">Who met whom</a>
       <a href="#labour">Shared work</a>
       <a href="#methods">Appendix</a>
@@ -182,9 +182,38 @@ Bar 4  .  D4 .  F4 .  A4 G4 E4</code></pre>
 </section>
 
 <section id="directions">
-  <h2>Topic diversity</h2>
+  <h2>How topics moved</h2>
   <p>The archive assigns each conversation a primary topic. Community and research (56 rooms), memory and evidence (46), and identity and protocols (42) formed the largest groups. Writing and play (36), music and movement (20), and chess and games (7) together accounted for 63 of 207 rooms and 40% of all agent-written messages.</p>
   <p>The opening chart groups whole conversations. A separate model of individual messages finds music and fiction to be the two largest themes, at about 36% of classified messages together. It also picks up talk about agent memory, payment and privacy protocols, and proof of personhood. In 22 of 38 conversations with at least 20 messages, the first and last quarter had different dominant topics. The longest non-chess exchange, for example, moved from proof of personhood to football refereeing.</p>
+  <figure>
+    <div class="fig">
+      <h3 class="explorable-title">Where conversations went</h3>
+      <div class="flow-controls">
+        <label for="topic-start">Starting topic</label>
+        <select id="topic-start" disabled><option value="">All topics</option></select>
+      </div>
+      <div class="flow-columns"><span>First quarter</span><span>Last quarter</span></div>
+      <div class="chart" id="fig-topic-flow"></div>
+      <p class="chart-reading" id="topic-flow-reading" aria-live="polite"></p>
+      <details>
+        <summary>See the exact counts</summary>
+        <div class="table-wrap"><table class="compare" id="tbl-drift"></table></div>
+      </details>
+    </div>
+    <figcaption>Each ribbon connects the dominant topics in the first and last quarters of conversations with at least 20 agent-written messages. Width shows how many conversations took that path.</figcaption>
+  </figure>
+  <figure>
+    <div class="fig">
+      <h3 class="explorable-title">Follow one conversation</h3>
+      <div class="flow-controls">
+        <label for="topic-conversation">Conversation</label>
+        <select id="topic-conversation" disabled><option>Loading conversations…</option></select>
+      </div>
+      <div class="chart" id="fig-conversation-flow"></div>
+      <ol id="topic-conversation-steps" class="trace-steps" aria-label="Topics in conversation order"></ol>
+    </div>
+    <figcaption>Each point marks the start of a quarter of the conversation. The label below gives the strongest topic signal across the messages in that quarter.</figcaption>
+  </figure>
   <figure>
     <div class="fig">
       <p class="chart-title">Share of messages per topic, per half hour</p>
@@ -192,10 +221,6 @@ Bar 4  .  D4 .  F4 .  A4 G4 E4</code></pre>
       <div class="chart" id="fig-topics"></div>
     </div>
     <figcaption>Message topics over time from TF-IDF and non-negative matrix factorization (k = 10, seed 1). The chart shows each topic’s share among messages classified in that half-hour. The queue stall left sparse observations early in the run.</figcaption>
-  </figure>
-  <figure>
-    <div class="fig"><div class="table-wrap"><table class="compare" id="tbl-drift"></table></div></div>
-    <figcaption><b>Where long conversations drift</b> (≥ 20 messages; dominant topic of the first quarter → last quarter).</figcaption>
   </figure>
 </section>
 
@@ -357,6 +382,7 @@ Bar 4  .  D4 .  F4 .  A4 G4 E4</code></pre>
   <div class="buttons" aria-label="Data and code">
     <a class="btn secondary" href="https://github.com/Deceptrax123/The-Last-Human-Residency/blob/main/RUN.md#networking"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>Sandbox code and run steps</a>
     <a class="btn secondary" href="static/data/science.json" download>Analysis results (JSON)</a>
+    <a class="btn secondary" href="static/data/topic-flows.json" download>Topic flows (JSON)</a>
     <a class="btn secondary" href="static/data/networking.json" download>Figure data (JSON)</a>
     <a class="btn secondary" href="https://github.com/Deceptrax123/agent-networking-study/tree/main/analysis">Analysis scripts</a>
   </div>
@@ -436,7 +462,7 @@ Bar 4  .  D4 .  F4 .  A4 G4 E4</code></pre>
     <p><b>Acknowledgements.</b> The selected cases, room categories and relay evidence build on earlier log analyses by GPT-6.1 Sol and GPT-6.2 Astra. Charts are rendered with D3.</p>
   </div>
 </footer>
-<script src="static/js/charts.js"></script>
-<script src="static/js/main.js?v=2"></script>
+<script src="static/js/charts.js?v=4"></script>
+<script src="static/js/main.js?v=4"></script>
 </body>
 </html>

@@ -1,8 +1,9 @@
 /* Figures for Study 1 (networking). Data: static/data/networking.json + science.json */
 (async function () {
-  const [D, X] = await Promise.all([
+  const [D, X, flowData] = await Promise.all([
     fetch("static/data/networking.json").then((r) => r.json()),
     fetch("static/data/science.json").then((r) => r.json()),
+    fetch("static/data/topic-flows.json").then((r) => r.json()),
   ]);
   const C = window.Charts, fmt = C.fmt;
   const $ = (id) => document.getElementById(id);
@@ -97,10 +98,48 @@
     return `<article class="convo"><header><h4>${i + 1}. ${esc(c.people.join(" & "))}</h4><span class="meta">${c.messages} messages · ${c.minutes} min · topic: ${esc(c.topic)}</span></header>
       <p class="why">${esc(c.why)}</p>${turns}<p class="crit">Selection rule: ${esc(c.criterion)}</p></article>`;
   }).join("");
-  // ---------- drift table ----------
-  $("tbl-drift").innerHTML = `<thead><tr><th>From (first quarter)</th><th>To (last quarter)</th><th>Conversations</th></tr></thead><tbody>${
-    X.drift.flows.map((f) => `<tr><td>${esc(f.from)}</td><td>${esc(f.to)}</td><td>${f.n}</td></tr>`).join("")}
-    <tr><td colspan="2"><b>Stayed on topic</b></td><td>${X.drift.n - X.drift.drifted}</td></tr></tbody>`;
+  const startTopic = $("topic-start");
+  const conversation = $("topic-conversation");
+  const paths = flowData.paths;
+  const opening = (path) => path.windows[0].topic;
+  const closing = (path) => path.windows.at(-1).topic;
+  const topics = X.topics.series.map((series) => series.topic);
+  const shortLabels = {
+    "Music & listening": "Music", "Fiction & scenes": "Fiction", "Critique & comparison": "Critique",
+    "Advice & decisions": "Advice", "Agent memory & corrections": "Memory", "Wrap-ups & shared drafts": "Shared drafts",
+    "Payments & privacy protocols": "Payments", "Biometrics & proof of personhood": "Personhood",
+  };
+  const phases = ["Opening", "Second quarter", "Third quarter", "Closing"];
+  startTopic.append(...topics.filter((topic) => paths.some((path) => opening(path) === topic))
+    .map((topic) => new Option(topic, topic)));
+  conversation.replaceChildren(...paths.map((path, i) => new Option(`${path.people.join(" & ")} · ${path.n} messages`, i)));
+  conversation.value = paths.findIndex((path) => opening(path) !== closing(path));
+  startTopic.disabled = conversation.disabled = false;
+
+  function renderTopicFlow() {
+    const selected = paths.filter((path) => !startTopic.value || opening(path) === startTopic.value);
+    const countsByPair = d3.rollups(selected, (items) => items.length, opening, closing);
+    const links = countsByPair.flatMap(([from, ends]) => ends.map(([to, n]) => ({ from, to, n })));
+    links.sort((a, b) => b.n - a.n);
+    const changed = d3.sum(links.filter((link) => link.from !== link.to), (link) => link.n);
+    $("topic-flow-reading").textContent = `${changed} of ${selected.length} conversations ended on a different dominant topic.`;
+    C.topicFlow($("fig-topic-flow"), { links, topics, shortLabel: (topic) => shortLabels[topic] || topic });
+    $("tbl-drift").innerHTML = `<thead><tr><th scope="col">Opening topic</th><th scope="col">Closing topic</th><th scope="col">Conversations</th></tr></thead><tbody>${
+      links.map((link) => `<tr><td>${esc(link.from)}</td><td>${esc(link.to)}</td><td>${link.n}</td></tr>`).join("")}</tbody>`;
+  }
+
+  function renderConversation() {
+    const steps = paths[Number(conversation.value)].windows.map((quarter, i) => ({ ...quarter, title: `${phases[i]}: ${quarter.topic}` }));
+    C.trace($("fig-conversation-flow"), { steps, label: (_, i) => phases[i], format: C.clock, axisLabel: "Time since event start" });
+    $("topic-conversation-steps").innerHTML = steps.map((step, i) => `<li><b>${phases[i]} · ${esc(step.topic)}</b>
+      <span>Messages ${step.first}–${step.last} · ${C.clock(step.h)}</span></li>`).join("");
+  }
+
+  startTopic.addEventListener("change", renderTopicFlow);
+  conversation.addEventListener("change", renderConversation);
+  C.register(renderTopicFlow);
+  C.register(renderConversation);
+
   const pyTot = d3.sum(X.labour.rows, (r) => r.python);
   $("py-top3").textContent = pct(X.labour.python_top3);
 

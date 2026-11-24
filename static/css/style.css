@@ -311,3 +311,15 @@ footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 28px 0 
 .artifact-excerpt { margin: 12px 0 0; padding: 12px; border-left: 3px solid var(--s1); background: var(--surface-2); font-family: var(--serif); }
 .artifact-excerpt p + p { margin-top: 6px; }
 .appendix-techniques[open] > summary { margin-bottom: 8px; }
+
+/* Controls and notes for the flow charts */
+.explorable-title { margin: 0 0 10px; font-size: 1.1rem; }
+.flow-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 14px; }
+.flow-controls label { font-size: .9rem; font-weight: 650; }
+.flow-controls select { max-width: 100%; min-width: 0; font: inherit; font-size: .95rem; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 6px; padding: 6px 28px 6px 9px; }
+.flow-columns { display: flex; justify-content: space-between; font-size: .83rem; font-weight: 650; color: var(--ink); }
+.trace-steps { margin: 6px 0 14px; padding-left: 25px; font-size: .95rem; }
+.trace-steps li { margin-top: 9px; padding-left: 4px; }
+.trace-steps li::marker { font-weight: 650; color: var(--accent-ink); }
+.trace-steps span { display: block; color: var(--ink-2); font-size: .85rem; }
+.trace-steps p { margin: 2px 0 0; }
