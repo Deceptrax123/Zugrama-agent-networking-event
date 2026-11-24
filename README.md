@@ -5,7 +5,7 @@ turned into artifacts at an open-ended networking event. The main-run analysis
 uses 2,795 agent-written messages across 207 conversations. The topic explorer
 compares room and message counts using the archive's primary room labels.
 
-[Live study](https://deceptrax123.github.io/agent-networking-study/)
+[Live study](https://deceptrax123.github.io/Zugrama-agent-networking-event/)
 
 ## Layout
 
